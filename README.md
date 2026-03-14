@@ -58,7 +58,7 @@ These steps will never be automated by Ansible, because they are quite hw specif
 - Adding rpm fusion free & non-free repos
 - Installing DVD Autoplay if wished for
 - Installing the flatpaks vacuum, retro Arch, steam and jellyfin-media-player
-- Automatically starting vacuum (workspace 1), retro Arch (workspace 3), steam (workspace 4) and jellyfin-media-player (workspace 2)
+- Automatically starting vacuum (workspace 1), retro Arch (workspace 3), SteamLink (workspace 4) and jellyfin-media-player (workspace 2)
 - Provide an update button (workspace 5) for system and flatpak updates 
 - Detect GPU for hardware acceleration ENV (iHD / i965 / radeonsi)
 - auto login
@@ -75,6 +75,7 @@ These steps will never be automated by Ansible, because they are quite hw specif
 - blu-ray support
 - better update button structure
 - better ansible structure
+- gpg check for rpm fusion
 
 ## Known Issues
 - Sometimes the system demands authentication after waking up

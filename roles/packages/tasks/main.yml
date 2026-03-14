@@ -43,6 +43,7 @@
       - libva-intel-driver
       - python3-tkinter
       - steam-devices
+      - htop
     state: present
 
 ############################################
