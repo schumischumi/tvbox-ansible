@@ -7,23 +7,23 @@
 - name: Copy update execution config
   ansible.builtin.copy:
     src: bbe_update_all.json
-    dest: "/home/{{ ansible_user }}/bbe_update_all.json"
+    dest: "/home/{{ sway_user }}/bbe_update_all.json"
     mode: '0644'
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ sway_user }}"
+    group: "{{ sway_user }}"
 
 - name: Copy big button executor
   ansible.builtin.copy:
     src: big_button_exec.py
-    dest: "/home/{{ ansible_user }}/big_button_exec.py"
+    dest: "/home/{{ sway_user }}/big_button_exec.py"
     mode: '0755'
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ sway_user }}"
+    group: "{{ sway_user }}"
 
 - name: Create sudoers.d file for passwordless dnf upgrade
   ansible.builtin.copy:
     content: |
-      {{ ansible_name }} ALL = NOPASSWD: /usr/bin/dnf upgrade *
+      {{ sway_user }} ALL = NOPASSWD: /usr/bin/dnf upgrade *
     dest: /etc/sudoers.d/90-dnf-upgrade
     owner: root
     group: root

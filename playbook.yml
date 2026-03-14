@@ -2,8 +2,8 @@
   become: true
 
   vars_prompt:
-    - name: ansible_user
-      prompt: "Which is the default user?"
+    - name: sway_user
+      prompt: "Which is the user executing sway?"
       private: false
 
   roles:
