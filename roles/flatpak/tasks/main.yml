@@ -32,19 +32,14 @@
 - name: Determine VAAPI driver
   set_fact:
     vaapi_driver: >-
-      {% if "Intel" in gpu_info.stdout and "UHD" in gpu_info.stdout %}
-      iHD
-      {% elif "Intel" in gpu_info.stdout %}
-      i965
-      {% elif "AMD" in gpu_info.stdout or "Radeon" in gpu_info.stdout %}
-      radeonsi
-      {% else %}
-      iHD
-      {% endif %}
+      {% if "Intel" in gpu_info.stdout and "UHD" in gpu_info.stdout %}iHD
+      {% elif "Intel" in gpu_info.stdout %}i965
+      {% elif "AMD" in gpu_info.stdout or "Radeon" in gpu_info.stdout %}radeonsi
+      {% else %}iHD{% endif %}
 
 - name: Show selected VAAPI driver
   debug:
-    msg: "Using VAAPI driver: {{ vaapi_driver }}"
+    msg: "Using VAAPI driver: '{{ vaapi_driver }}'"
 
 - name: Apply VAAPI override to flatpak apps
   vars:
@@ -52,8 +47,7 @@
       - rocks.shy.VacuumTube
       - com.github.iwalton3.jellyfin-media-player
       - org.libretro.RetroArch
-  shell: >-
-    for app in {{ flatpak_vaapi_apps | join(' ') }}; do
-      flatpak override --user --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} "$app"
-    done
+  command: >
+    flatpak override --user --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} {{ item }}
+  loop: "{{ flatpak_vaapi_apps }}"
   become: false
