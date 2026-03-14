@@ -6,6 +6,13 @@
       prompt: "Which is the user executing sway?"
       private: false
 
+  vars:
+    flatpak_vaapi_apps:
+      - rocks.shy.VacuumTube
+      - com.github.iwalton3.jellyfin-media-player
+      - org.libretro.RetroArch
+      - com.valvesoftware.Steam
+
   roles:
     - packages
     - flatpak

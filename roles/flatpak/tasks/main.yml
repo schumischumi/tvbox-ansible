@@ -13,11 +13,12 @@
     flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
 
 - name: Install apps
-  vars:
-    flatpak_vaapi_apps:
-      - rocks.shy.VacuumTube
-      - com.github.iwalton3.jellyfin-media-player
-      - org.libretro.RetroArch
+  # vars:
+  #   flatpak_vaapi_apps:
+  #     - rocks.shy.VacuumTube
+  #     - com.github.iwalton3.jellyfin-media-player
+  #     - org.libretro.RetroArch
+  #     - com.valvesoftware.Steam
   command: >
     flatpak install --assumeyes --noninteractive {{ item }}
   loop: "{{ flatpak_vaapi_apps }}"
@@ -43,15 +44,15 @@
     msg: "Using VAAPI driver: '{{ vaapi_driver }}'"
 
 - name: Apply VAAPI override to flatpak apps
-  vars:
-    flatpak_vaapi_apps:
-      - rocks.shy.VacuumTube
-      - com.github.iwalton3.jellyfin-media-player
-      - org.libretro.RetroArch
+  # vars:
+  #   flatpak_vaapi_apps:
+  #     - rocks.shy.VacuumTube
+  #     - com.github.iwalton3.jellyfin-media-player
+  #     - org.libretro.RetroArch
   command: >
-    flatpak override --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} {{ item }}
+    flatpak override --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} --device=dri {{ item }}
   loop: "{{ flatpak_vaapi_apps }}"
 
-- name: Grant Vacuum access on dri for HW acceleration
-  shell: |
-    flatpak override --device=dri rocks.shy.VacuumTube
+# - name: Grant Vacuum access on dri for HW acceleration
+#   shell: |
+#     flatpak override --device=dri rocks.shy.VacuumTube
