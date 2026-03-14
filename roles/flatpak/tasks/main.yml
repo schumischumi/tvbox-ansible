@@ -52,7 +52,8 @@
       - rocks.shy.VacuumTube
       - com.github.iwalton3.jellyfin-media-player
       - org.libretro.RetroArch
-  command: >
-    flatpak override --user --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} {{ item }}
-  loop: "{{ flatpak_vaapi_apps }}"
+  shell: >-
+    for app in {{ flatpak_vaapi_apps | join(' ') }}; do
+      flatpak override --user --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} "$app"
+    done
   become: false
