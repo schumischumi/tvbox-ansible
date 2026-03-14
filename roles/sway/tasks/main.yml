@@ -3,7 +3,7 @@
     path: "/home/{{ ansible_user }}/.config/sway/config.d"
     state: directory
     mode: '0755'
-    user: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
 - name: Install sway config
@@ -11,7 +11,7 @@
     src: config
     dest: "/home/{{ ansible_user }}/.config/sway/config"
     mode: '0644'
-    user: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
 - name: Install sway autostart config
@@ -19,7 +19,7 @@
     src: config.d/autostart.conf
     dest: "/home/{{ ansible_user }}/.config/sway/config.d/autostart.conf"
     mode: '0644'
-    user: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
 - name: Create foot config directory
@@ -27,7 +27,7 @@
     path: "/home/{{ ansible_user }}/.config/foot"
     state: directory
     mode: '0755'
-    user: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
 - name: Copy foot config
@@ -35,5 +35,5 @@
     src: foot.ini
     dest: "/home/{{ ansible_user }}/.config/foot/foot.ini"
     mode: '0755'
-    user: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
