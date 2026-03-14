@@ -12,18 +12,9 @@
     state: present
     flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
 
-- name: Install flatpak apps
-  community.general.flatpak:
-    name:
-      - com.github.iwalton3.jellyfin-media-player
-      - org.libretro.RetroArch
-      - rocks.shy.VacuumTube
-    state: present
-    become_user: "{{ ansible_user }}"
-
 
 ############################################
-# Add overrides
+# Add overrides and packages
 ############################################
 - name: Detect GPU
   command: lspci -nnk
@@ -42,13 +33,14 @@
   debug:
     msg: "Using VAAPI driver: '{{ vaapi_driver }}'"
 
-- name: Apply VAAPI override to flatpak apps
+- name: Install apps and apply VAAPI override to flatpak apps
   vars:
     flatpak_vaapi_apps:
       - rocks.shy.VacuumTube
       - com.github.iwalton3.jellyfin-media-player
       - org.libretro.RetroArch
   command: >
+    flatpak install --assumeyes --noninteractive {{ item }}
     flatpak override --user --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} {{ item }}
   loop: "{{ flatpak_vaapi_apps }}"
   become: true
