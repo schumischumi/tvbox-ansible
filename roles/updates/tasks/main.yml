@@ -8,7 +8,7 @@
 - name: Copy update execution config
   ansible.builtin.copy:
     src: bbe_update_all.json
-    dest: "/home/{{ ansible_user }}/bbe_update_all.json"
+    dest: "{{ ansible_env.HOME }}/bbe_update_all.json"
     mode: '0644'
   become: false
   become_user: "{{ ansible_user }}"
@@ -16,7 +16,7 @@
 - name: Copy big button executor
   ansible.builtin.copy:
     src: big_button_exec.py
-    dest: "/home/{{ ansible_user }}/big_button_exec.py"
+    dest: "{{ ansible_env.HOME }}/big_button_exec.py"
     mode: '0755'
   become: false
   become_user: "{{ ansible_user }}"
