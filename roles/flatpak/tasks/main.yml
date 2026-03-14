@@ -13,11 +13,11 @@
     flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
 
 - name: Install flatpak apps
-  flatpak:
+  community.general.flatpak:
     name:
-      - flathub install com.github.iwalton3.jellyfin-media-player
-      - flathub install org.libretro.RetroArch
-      - flatpak install flathub rocks.shy.VacuumTube
+      - com.github.iwalton3.jellyfin-media-player
+      - org.libretro.RetroArch
+      - flathub rocks.shy.VacuumTube
     state: present
 
 
