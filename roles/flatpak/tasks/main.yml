@@ -51,3 +51,8 @@
     flatpak override --user --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} {{ item }}
   loop: "{{ flatpak_vaapi_apps }}"
   become: false
+
+- name: Grant Vacuum access on dri for HW acceleration
+  shell: |
+    flatpak override --user --device=dri rocks.shy.VacuumTube
+  become: false
