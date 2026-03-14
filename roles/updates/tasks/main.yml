@@ -11,6 +11,7 @@
     dest: "{{ ansible_env.HOME }}/bbe_update_all.json"
     mode: '0644'
   become: true
+  become_user: "{{ ansible_user }}"
 
 - name: Copy big button executor
   ansible.builtin.copy:
@@ -18,6 +19,7 @@
     dest: "{{ ansible_env.HOME }}/big_button_exec.py"
     mode: '0755'
   become: true
+  become_user: "{{ ansible_user }}"
 
 - name: Create sudoers.d file for passwordless dnf upgrade
   ansible.builtin.copy:
@@ -29,3 +31,4 @@
     mode: '0440'
     validate: '/usr/sbin/visudo -cf %s'
   become: true
+  become_user: "{{ ansible_user }}"

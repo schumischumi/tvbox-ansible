@@ -19,6 +19,7 @@
       - org.libretro.RetroArch
       - rocks.shy.VacuumTube
     state: present
+    become_user: "{{ ansible_user }}"
 
 
 ############################################
@@ -50,9 +51,11 @@
   command: >
     flatpak override --user --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} {{ item }}
   loop: "{{ flatpak_vaapi_apps }}"
-  become: false
+  become: true
+  become_user: "{{ ansible_user }}"
 
 - name: Grant Vacuum access on dri for HW acceleration
   shell: |
     flatpak override --user --device=dri rocks.shy.VacuumTube
-  become: false
+  become: true
+  become_user: "{{ ansible_user }}"

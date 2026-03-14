@@ -1,9 +1,10 @@
 - name: Create sway config directory
   file:
-    path: "{{ ansible_env.HOME }}/.config/sway.config.d"
+    path: "{{ ansible_env.HOME }}/.config/sway/config.d"
     state: directory
     mode: '0755'
   become: true
+  become_user: "{{ ansible_user }}"
 
 - name: Install sway config
   copy:
@@ -11,6 +12,7 @@
     dest: "{{ ansible_env.HOME }}/.config/sway/config"
     mode: '0644'
   become: true
+  become_user: "{{ ansible_user }}"
 
 - name: Install sway autostart config
   copy:
@@ -18,6 +20,7 @@
     dest: "{{ ansible_env.HOME }}/.config/sway/config.d/autostart.conf"
     mode: '0644'
   become: true
+  become_user: "{{ ansible_user }}"
 
 - name: Create foot config directory
   file:
@@ -25,6 +28,7 @@
     state: directory
     mode: '0755'
   become: true
+  become_user: "{{ ansible_user }}"
 
 - name: Copy foot config
   ansible.builtin.copy:
@@ -32,3 +36,4 @@
     dest: "{{ ansible_env.HOME }}/.config/foot/foot.ini"
     mode: '0755'
   become: true
+  become_user: "{{ ansible_user }}"
