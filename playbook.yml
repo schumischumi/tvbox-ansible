@@ -1,0 +1,13 @@
+- hosts: localhost
+  become: true
+
+  vars_prompt:
+    - name: install_dvd_autoplay
+      prompt: "Apply config to automatically play DVDs? (yes/no)"
+      private: false
+
+  roles:
+    - packages
+    - flatpak
+    - sway
+    - updates

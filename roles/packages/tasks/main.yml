@@ -1,0 +1,62 @@
+############################################
+# Install basic packages
+############################################
+- name: Get Fedora version
+  command: rpm -E %fedora
+  register: fedora_version
+  changed_when: false
+
+- name: Install RPM Fusion free repo
+  dnf:
+    name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_version.stdout }}.noarch.rpm"
+    state: present
+
+- name: Install RPM Fusion nonfree repo
+  dnf:
+    name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_version.stdout }}.noarch.rpm"
+    state: present
+
+- name: Install base packages
+  dnf:
+    name:
+      - flatpak
+      - libva-utils
+      - libva
+      - gstreamer1-vaapi
+      - intel-gpu-tools
+      - mesa-dri-drivers
+      - mesa-vdpau-drivers-freeworld
+      - gnome-text-editor
+      - libva-intel-driver
+      - python3-tkinter
+    state: present
+
+############################################
+# Base config
+############################################
+- name: Set the hostname
+  ansible.builtin.hostname:
+    name: "fedora-tvbox-test1"
+
+- name: Set the timezone to Europe/Berlin
+  ansible.builtin.command:
+    cmd: timedatectl set-timezone Europe/Berlin
+
+
+############################################
+# Install packages for dvd autoplay
+############################################
+- name: Install rpmfusion tainted repo
+  dnf:
+    name: rpmfusion-free-release-tainted
+    state: present
+  when: install_dvd_autoplay
+
+- name: Install dvd packages
+  dnf:
+    name:
+      - libdvdcss
+      - udisks2
+      - mpv
+    state: present
+  when: install_dvd_autoplay

@@ -1,0 +1,24 @@
+include /etc/sway/config
+
+# disable internal monitor for apps like jellyfin
+output LVDS-1 disable
+
+# custom key bindings
+bindsym Next workspace prev
+bindsym Prior workspace next
+bindsym Menu exec exec $menu
+bindsym XF86HomePage exec swaymsg workspace $(swaymsg -t get_workspaces | jq -r '.[].name' | sort -n | tail -1 | awk '{print $1 + 1}')
+
+# deactivate auth / lock screen after sleep
+exec_always pkill swayidle 2>/dev/null || true
+exec_always swayidle -w \
+    timeout 0 '' \
+    before-sleep '' \
+    lock '' \
+    unlock ''
+
+# Set German keyboard layout for all keyboards
+input * {
+    xkb_layout "de"
+}
+
