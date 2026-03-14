@@ -9,14 +9,14 @@
   ignore_errors: true
   check_mode: no
 
-- name: Import RPM Fusion Free GPG key
-  ansible.builtin.rpm_key:
-    key: "https://rpmfusion.org/keys?action=AttachFile&do=view&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020"
+# - name: Import RPM Fusion Free GPG key
+#   ansible.builtin.rpm_key:
+#     key: "https://rpmfusion.org/keys?action=AttachFile&do=view&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020"
 
-- name: Import RPM Fusion NON Free GPG key
-  ansible.builtin.rpm_key:
-    key: "https://rpmfusion.org/keys?action=AttachFile&do=view&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
-    
+# - name: Import RPM Fusion NON Free GPG key
+#   ansible.builtin.rpm_key:
+#     key: "https://rpmfusion.org/keys?action=AttachFile&do=view&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
+
 - name: Install RPM Fusion free repo
   dnf:
     name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_version.stdout }}.noarch.rpm"
