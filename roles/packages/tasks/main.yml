@@ -10,11 +10,12 @@
   check_mode: no
 
 - name: Import RPM Fusion Free GPG key
-  community.general.yum_repository_import_key:
-    # The task is only relevant for Fedora 39 and above, where the repo file itself contains the key.
-    # For older versions (like F38), the old behavior of installing the .rpm to extract the key was often safer or necessary.
-    key_url: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_version.stdout }}.noarch.rpm"
-  when: fedora_version.stdout | int >= 39
+  ansible.builtin.rpm_key:
+    key: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_version.stdout }}.noarch.rpm"
+
+- name: Import RPM Fusion NON Free GPG key
+  ansible.builtin.rpm_key:
+    key: "https://download1.rpmfusion.org/free/fedora/rpmfusion-nonfree-release-{{ fedora_version.stdout }}.noarch.rpm"
 - name: Install RPM Fusion free repo
   dnf:
     name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_version.stdout }}.noarch.rpm"
