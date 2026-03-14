@@ -37,3 +37,9 @@
     mode: '0755'
     owner: "{{ sway_user }}"
     group: "{{ sway_user }}"
+
+- name: Copy auto login config
+  ansible.builtin.copy:
+    src: autologin.conf
+    dest: "/etc/sddm.conf.d/autologin.conf"
+    mode: '0644'
