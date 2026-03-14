@@ -42,6 +42,7 @@
       - gnome-text-editor
       - libva-intel-driver
       - python3-tkinter
+      - steam-devices
     state: present
 
 ############################################
