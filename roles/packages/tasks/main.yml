@@ -63,7 +63,7 @@
   dnf:
     name: rpmfusion-free-release-tainted
     state: present
-  when: install_dvd_autoplay
+  #when: install_dvd_autoplay
 
 - name: Install dvd packages
   dnf:
@@ -72,4 +72,4 @@
       - udisks2
       - mpv
     state: present
-  when: install_dvd_autoplay
+  #when: install_dvd_autoplay
