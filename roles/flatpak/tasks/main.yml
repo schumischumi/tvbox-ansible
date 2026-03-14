@@ -17,7 +17,7 @@
     name:
       - com.github.iwalton3.jellyfin-media-player
       - org.libretro.RetroArch
-      - flathub rocks.shy.VacuumTube
+      - rocks.shy.VacuumTube
     state: present
 
 
