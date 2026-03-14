@@ -49,10 +49,9 @@
       - com.github.iwalton3.jellyfin-media-player
       - org.libretro.RetroArch
   command: >
-    flatpak override --user --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} {{ item }}
+    flatpak override --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} {{ item }}
   loop: "{{ flatpak_vaapi_apps }}"
 
 - name: Grant Vacuum access on dri for HW acceleration
   shell: |
-    flatpak override --user --device=dri rocks.shy.VacuumTube
-    
+    flatpak override --device=dri rocks.shy.VacuumTube

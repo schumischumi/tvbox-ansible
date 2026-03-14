@@ -1,10 +1,10 @@
 - hosts: localhost
   become: true
 
-  # vars_prompt:
-  #   - name: ansible_user
-  #     prompt: "Which is the default user?"
-  #     private: false
+  vars_prompt:
+    - name: ansible_user
+      prompt: "Which is the default user?"
+      private: false
 
   roles:
     - packages
