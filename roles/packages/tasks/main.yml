@@ -51,7 +51,7 @@
 ############################################
 - name: Set the hostname
   ansible.builtin.hostname:
-    name: "fedora-tvbox-test1"
+    name: "fedora-tvbox"
 
 - name: Set the timezone to Europe/Berlin
   ansible.builtin.command:
