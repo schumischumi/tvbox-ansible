@@ -15,8 +15,8 @@
 - name: Install flatpak apps
   flatpak:
     name:
-      - flathub com.github.iwalton3.jellyfin-media-player
-      - flathub org.libretro.RetroArch
+      - flathub install com.github.iwalton3.jellyfin-media-player
+      - flathub install org.libretro.RetroArch
       - flatpak install flathub rocks.shy.VacuumTube
     state: present
 
