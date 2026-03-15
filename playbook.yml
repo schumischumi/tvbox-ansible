@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: true
   become: true
-  tasks:
+  pre_tasks:
     - name: Fetch the default username from /etc/passwd
       ansible.builtin.shell: |
         set -o pipefail
