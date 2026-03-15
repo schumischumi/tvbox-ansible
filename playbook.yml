@@ -8,7 +8,7 @@
       private: false
       default: "{{ primary_user | default('') }}"
 
-  tasks:
+  pre_tasks:
     # Detect primary user (non-root, non-system)
     - name: Find the primary non-root user with home directory
       ansible.builtin.command: |
