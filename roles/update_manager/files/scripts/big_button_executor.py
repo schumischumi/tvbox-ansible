@@ -52,6 +52,7 @@ class LiveUpdateWindow(tk.Tk):
             pady=40,
             command=self.start_command
         )
+        self.button.focus_set()
         self.button.pack(expand=True)
 
         # Live log area
@@ -131,6 +132,7 @@ class LiveUpdateWindow(tk.Tk):
                 self.output_queue.put(f"=== SUCCESS ===\n{SUCCESS_MSG}\n")
             else:
                 self.output_queue.put(f"=== FAILED (exit code {exit_code}) ===\n")
+            self.button.config(text=BUTTON_TEXT, state="active", bg="#4CAF50")
 
         except Exception as e:
             self.output_queue.put(f"\n=== ERROR ===\n{str(e)}\n")

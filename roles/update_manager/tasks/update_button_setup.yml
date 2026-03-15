@@ -1,11 +1,3 @@
-- name: Create big button executor config directory
-  ansible.builtin.file:
-    path: "/home/{{ sway_user }}/.config/bbe/config"
-    state: directory
-    mode: '0755'
-    owner: "{{ sway_user }}"
-    group: "{{ sway_user }}"
-
 - name: Create big button executor scripts directory
   ansible.builtin.file:
     path: "/home/{{ sway_user }}/.config/bbe/scripts"
@@ -23,9 +15,17 @@
     group: "{{ sway_user }}"
 
 - name: Copy update execution config
+  ansible.builtin.template:
+    src: update_all_packages.json
+    dest: "/home/{{ sway_user }}/.config/bbe/update_all_packages.json"
+    mode: '0644'
+    owner: "{{ sway_user }}"
+    group: "{{ sway_user }}"
+
+- name: Copy dvd launch config
   ansible.builtin.copy:
     src: config/update_all_packages.json
-    dest: "/home/{{ sway_user }}/.config/bbe/config/update_all_packages.json"
+    dest: "/home/{{ sway_user }}/.config/bbe/launch_dvd.json"
     mode: '0644'
     owner: "{{ sway_user }}"
     group: "{{ sway_user }}"

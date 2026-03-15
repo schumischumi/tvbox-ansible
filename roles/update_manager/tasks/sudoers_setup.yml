@@ -2,6 +2,7 @@
   ansible.builtin.copy:
     content: |
       {{ sway_user }} ALL = NOPASSWD: /usr/bin/dnf upgrade *
+      {{ sway_user }} ALL = NOPASSWD: /usr/bin/flatpak *
     dest: /etc/sudoers.d/90-dnf-upgrade
     owner: root
     group: root

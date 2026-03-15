@@ -7,6 +7,4 @@
   ansible.builtin.dnf:
     name:
       - libdvdcss
-      - udisks2
-      - mpv
     state: present

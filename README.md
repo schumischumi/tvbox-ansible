@@ -59,7 +59,7 @@ These steps will never be automated by Ansible, because they are quite hw specif
 - Installing DVD Autoplay if wished for
 - Installing the flatpaks vacuum, retro Arch, steam and jellyfin-media-player
 - Automatically starting vacuum (workspace 1), retro Arch (workspace 3), SteamLink (workspace 4) and jellyfin-media-player (workspace 2)
-- Provide an update button (workspace 5) for system and flatpak updates 
+- Provide an update button (workspace 5) for system and flatpak updates
 - Detect GPU for hardware acceleration ENV (iHD / i965 / radeonsi)
 - auto login
 - overwrite timeout config so no auth is necessary after sleep
@@ -68,13 +68,8 @@ These steps will never be automated by Ansible, because they are quite hw specif
 
 ### Planned Features
 
-- better user handling in ansible
-- ask what should be installed
-- dvd udevrules
-- better dvd script
 - blu-ray support
 - better update button structure
-- better ansible structure
 - gpg check for rpm fusion
 
 ## Known Issues

@@ -1,5 +1,0 @@
-[Unit]
-Description=Play DVD automatically
-
-[Service]
-ExecStart=/usr/local/bin/auto-dvd-mpv.sh
