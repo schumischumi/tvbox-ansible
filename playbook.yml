@@ -17,11 +17,19 @@
       changed_when: false
       failed_when: false
 
+    - name: Show detected_user
+      ansible.builtin.debug:
+        msg: "detected_user: '{{ detected_user }}'"
+
     # Set the primary user as default if one exists
     - name: Set primary user as default value
       ansible.builtin.set_fact:
         primary_user: "{{ detected_user.stdout }}"
       when: detected_user.stdout != ""
+
+    - name: Show primary_user
+      ansible.builtin.debug:
+        msg: "primary_user: '{{ primary_user }}'"
 
     # Check if user exists
     - name: Verify that the specified user exists
