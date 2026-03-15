@@ -1,35 +1,32 @@
 ---
 - name: Configure Fedora SWAY TVBox
   hosts: localhost
+  gather_facts: false
   become: true
-  vars_prompt:
-    - name: sway_user
-      prompt: "Enter username for auto login and sway config"
-      private: false
-      default: "{{ primary_user | default('') }}"
-
-  pre_tasks:
-    # Detect primary user (non-root, non-system)
-    - name: Find the primary non-root user with home directory
-      ansible.builtin.command: |
+  tasks:
+    - name: Fetch the default username from /etc/passwd
+      ansible.builtin.shell: |
+        set -o pipefail
         awk -F: '$3 >= 1000 && $3 < 65534 && $7 != "/usr/sbin/nologin" && $7 != "/bin/false" {print $1}' /etc/passwd | head -n 1
-      register: detected_user
+      register: default_user
       changed_when: false
-      failed_when: false
 
-    - name: Show detected_user
-      ansible.builtin.debug:
-        msg: "detected_user: '{{ detected_user }}'"
-
-    # Set the primary user as default if one exists
-    - name: Set primary user as default value
+    - name: Set the default username as a fact
       ansible.builtin.set_fact:
-        primary_user: "{{ detected_user.stdout }}"
-      when: detected_user.stdout != ""
+        default_username: "{{ default_user.stdout }}"
 
-    - name: Show primary_user
+    - name: Prompt for username with default value
+      ansible.builtin.pause:
+        prompt: "Enter username for auto login and sway config (default: {{ default_username }})"
+      register: sway_user_prompt
+
+    - name: Set the final username
+      ansible.builtin.set_fact:
+        sway_user: "{{ sway_user_prompt.user_input | default(default_username) }}"
+
+    - name: Debug the entered username
       ansible.builtin.debug:
-        msg: "primary_user: '{{ primary_user }}'"
+        msg: "The username entered is {{ sway_user }}"
 
     # Check if user exists
     - name: Verify that the specified user exists
