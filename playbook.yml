@@ -1,7 +1,7 @@
 ---
 - name: Configure Fedora SWAY TVBox
   hosts: localhost
-  gather_facts: false
+  gather_facts: true
   become: true
   tasks:
     - name: Fetch the default username from /etc/passwd
