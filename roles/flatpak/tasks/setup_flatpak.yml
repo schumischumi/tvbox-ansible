@@ -1,0 +1,10 @@
+- name: Ensure flatpak installed
+  ansible.builtin.dnf:
+    name: flatpak
+    state: present
+
+- name: Add flathub repo
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo

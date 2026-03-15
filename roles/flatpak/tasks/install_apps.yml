@@ -1,0 +1,5 @@
+- name: Install Flatpak apps
+  community.general.flatpak:
+    name: "{{ flatpak_apps }}"
+    remote: flathub
+    state: present

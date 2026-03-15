@@ -1,0 +1,8 @@
+- name: Set the hostname
+  ansible.builtin.hostname:
+    name: "fedora-tvbox"
+
+- name: Set the timezone to Europe/Berlin
+  ansible.builtin.command:
+    cmd: timedatectl set-timezone Europe/Berlin
+  changed_when: false

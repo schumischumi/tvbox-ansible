@@ -1,0 +1,16 @@
+- name: Detect GPU
+  ansible.builtin.command: lspci -nnk
+  register: flatpak_gpu_info
+  changed_when: false
+
+- name: Determine VAAPI driver
+  ansible.builtin.set_fact:
+    flatpak_vaapi_driver: >-
+      {% if "Intel" in gpu_info.stdout and "UHD" in gpu_info.stdout %}iHD
+      {% elif "Intel" in gpu_info.stdout %}i965
+      {% elif "AMD" in gpu_info.stdout or "Radeon" in gpu_info.stdout %}radeonsi
+      {% else %}iHD{% endif %}
+
+- name: Show selected VAAPI driver
+  ansible.builtin.debug:
+    msg: "Using VAAPI driver: '{{ flatpak_vaapi_driver }}'"

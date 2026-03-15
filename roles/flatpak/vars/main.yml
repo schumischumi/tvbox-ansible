@@ -1,0 +1,5 @@
+flatpak_apps:
+  - rocks.shy.VacuumTube
+  - com.github.iwalton3.jellyfin-media-player
+  - org.libretro.RetroArch
+  - com.valvesoftware.SteamLink

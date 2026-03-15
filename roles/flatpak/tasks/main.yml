@@ -1,43 +1,12 @@
-############################################
-# Install flatpak packages
-############################################
-- name: Ensure flatpak installed
-  dnf:
-    name: flatpak
-    state: present
+---
+- name: Setup flatpak
+  ansible.builtin.include_tasks: setup_flatpak.yml
 
-- name: Add flathub repo
-  flatpak_remote:
-    name: flathub
-    state: present
-    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+- name: Install Apps
+  ansible.builtin.include_tasks: install_apps.yml
 
-- name: Install apps
-  command: >
-    flatpak install --assumeyes --noninteractive {{ item }}
-  loop: "{{ flatpak_vaapi_apps }}"
+- name: Detect VAAPI
+  ansible.builtin.include_tasks: vaapi_detection.yml
 
-############################################
-# Add overrides
-############################################
-- name: Detect GPU
-  command: lspci -nnk
-  register: gpu_info
-  changed_when: false
-
-- name: Determine VAAPI driver
-  set_fact:
-    vaapi_driver: >-
-      {% if "Intel" in gpu_info.stdout and "UHD" in gpu_info.stdout %}iHD
-      {% elif "Intel" in gpu_info.stdout %}i965
-      {% elif "AMD" in gpu_info.stdout or "Radeon" in gpu_info.stdout %}radeonsi
-      {% else %}iHD{% endif %}
-
-- name: Show selected VAAPI driver
-  debug:
-    msg: "Using VAAPI driver: '{{ vaapi_driver }}'"
-
-- name: Apply VAAPI override to flatpak apps
-  command: >
-    flatpak override --env=LIBVA_DRIVER_NAME={{ vaapi_driver }} --device=dri {{ item }}
-  loop: "{{ flatpak_vaapi_apps }}"
+- name: Apply Overrides
+  ansible.builtin.include_tasks: apply_overrides.yml

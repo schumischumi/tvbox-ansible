@@ -1,0 +1,12 @@
+- name: Install SDDM display manager
+  ansible.builtin.dnf:
+    name: sddm
+    state: present
+
+- name: Configure auto-login settings
+  ansible.builtin.template:
+    src: autologin.conf.j2
+    dest: /etc/sddm.conf.d/autologin.conf
+    mode: '0644'
+    owner: root
+    group: root

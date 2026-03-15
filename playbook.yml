@@ -1,20 +1,69 @@
-- hosts: localhost
+---
+- name: Configure Fedora SWAY TVBox
+  hosts: localhost
   become: true
-
   vars_prompt:
     - name: sway_user
-      prompt: "Which is the user executing sway?"
+      prompt: "Enter username for auto login and sway config"
       private: false
+      default: "{{ primary_user | default('') }}"
 
-  vars:
-    flatpak_vaapi_apps:
-      - rocks.shy.VacuumTube
-      - com.github.iwalton3.jellyfin-media-player
-      - org.libretro.RetroArch
-      - com.valvesoftware.SteamLink
+  tasks:
+    # Detect primary user (non-root, non-system)
+    - name: Find the primary non-root user with home directory
+      ansible.builtin.command: |
+        awk -F: '$3 >= 1000 && $3 < 65534 && $7 != "/usr/sbin/nologin" && $7 != "/bin/false" {print $1}' /etc/passwd | head -n 1
+      register: detected_user
+      changed_when: false
+      failed_when: false
+
+    # Set the primary user as default if one exists
+    - name: Set primary user as default value
+      ansible.builtin.set_fact:
+        primary_user: "{{ detected_user.stdout }}"
+      when: detected_user.stdout != ""
+
+    # Check if user exists
+    - name: Verify that the specified user exists
+      ansible.builtin.command: getent passwd {{ sway_user }}
+      register: user_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Fail if user does not exist
+      ansible.builtin.fail:
+        msg: "The user '{{ sway_user }}' does not exist."
+      when: user_check.rc != 0
+
+    # Check if home directory exists
+    - name: Verify that the home directory for the specified user exists
+      ansible.builtin.stat:
+        path: /home/{{ sway_user }}
+      register: home_dir_stat
+
+    - name: Fail if home directory does not exist
+      ansible.builtin.fail:
+        msg: "The home directory '/home/{{ sway_user }}' does not exist."
+      when: not home_dir_stat.stat.exists
 
   roles:
-    - packages
-    - flatpak
-    - sway
-    - updates
+    - role: base_system
+      tags: [system, packages]
+
+    - role: flatpak
+      tags: [system, flatpak]
+
+    - role: display_manager
+      tags: [desktop, login]
+
+    - role: dvd_autoplay
+      tags: [system, multimedia]
+
+    - role: update_manager
+      tags: [system, updates]
+
+    - role: user_config
+      tags: [desktop, sway]
+
+    - role: host_configuration
+      tags: [system, config]

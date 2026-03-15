@@ -1,0 +1,12 @@
+- name: Install rpmfusion tainted repo
+  ansible.builtin.dnf:
+    name: rpmfusion-free-release-tainted
+    state: present
+
+- name: Install dvd packages
+  ansible.builtin.dnf:
+    name:
+      - libdvdcss
+      - udisks2
+      - mpv
+    state: present

@@ -1,0 +1,6 @@
+---
+- name: Setup repositories
+  ansible.builtin.import_tasks: setup_repositories.yml
+
+- name: Install packages
+  ansible.builtin.import_tasks: install_packages.yml

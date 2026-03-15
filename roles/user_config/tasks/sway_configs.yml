@@ -1,0 +1,23 @@
+- name: Create sway config directory
+  ansible.builtin.file:
+    path: "/home/{{ sway_user }}/.config/sway/config.d"
+    state: directory
+    mode: '0755'
+    owner: "{{ sway_user }}"
+    group: "{{ sway_user }}"
+
+- name: Install sway config
+  ansible.builtin.copy:
+    src: sway/config
+    dest: "/home/{{ sway_user }}/.config/sway/config"
+    mode: '0644'
+    owner: "{{ sway_user }}"
+    group: "{{ sway_user }}"
+
+- name: Install sway autostart config
+  ansible.builtin.copy:
+    src: sway/autostart.conf
+    dest: "/home/{{ sway_user }}/.config/sway/config.d/autostart.conf"
+    mode: '0644'
+    owner: "{{ sway_user }}"
+    group: "{{ sway_user }}"

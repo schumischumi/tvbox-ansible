@@ -1,0 +1,16 @@
+- name: Install base packages
+  ansible.builtin.dnf:
+    name:
+      - flatpak
+      - libva-utils
+      - libva
+      - gstreamer1-vaapi
+      - intel-gpu-tools
+      - mesa-dri-drivers
+      - mesa-vdpau-drivers-freeworld
+      - gnome-text-editor
+      - libva-intel-driver
+      - python3-tkinter
+      - steam-devices
+      - htop
+    state: present

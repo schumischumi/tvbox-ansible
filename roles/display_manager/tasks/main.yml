@@ -1,0 +1,2 @@
+- name: Configure SDDM autologin
+  ansible.builtin.import_tasks: autologin.yml
