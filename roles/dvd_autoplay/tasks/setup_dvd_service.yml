@@ -8,7 +8,7 @@
 
 - name: Copy DVD service
   ansible.builtin.copy:
-    src: scripts/auto-play-dvd.service
+    src: config/auto-play-dvd.service
     dest: "/home/{{ sway_user }}/.config/systemd/user/auto-play-dvd.service"
     mode: '0755'
     owner: "{{ sway_user }}"
