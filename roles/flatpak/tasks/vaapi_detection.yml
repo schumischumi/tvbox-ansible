@@ -6,9 +6,9 @@
 - name: Determine VAAPI driver
   ansible.builtin.set_fact:
     flatpak_vaapi_driver: >-
-      {% if "Intel" in gpu_info.stdout and "UHD" in gpu_info.stdout %}iHD
-      {% elif "Intel" in gpu_info.stdout %}i965
-      {% elif "AMD" in gpu_info.stdout or "Radeon" in gpu_info.stdout %}radeonsi
+      {% if "Intel" in flatpak_gpu_info.stdout and "UHD" in flatpak_gpu_info.stdout %}iHD
+      {% elif "Intel" in flatpak_gpu_info.stdout %}i965
+      {% elif "AMD" in flatpak_gpu_info.stdout or "Radeon" in flatpak_gpu_info.stdout %}radeonsi
       {% else %}iHD{% endif %}
 
 - name: Show selected VAAPI driver
