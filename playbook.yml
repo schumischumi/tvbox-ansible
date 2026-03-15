@@ -22,7 +22,7 @@
 
     - name: Set the final username
       ansible.builtin.set_fact:
-        sway_user: "{{ sway_user_prompt.user_input | default_username }}"
+        sway_user: "{{ sway_user_prompt.user_input | trim | default(default_username) }}"
 
     - name: Debug the entered username
       ansible.builtin.debug:
