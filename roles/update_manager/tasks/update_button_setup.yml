@@ -24,7 +24,7 @@
 
 - name: Copy dvd launch config
   ansible.builtin.copy:
-    src: config/update_all_packages.json
+    src: config/launch_dvd.json
     dest: "/home/{{ sway_user }}/.config/bbe/launch_dvd.json"
     mode: '0644'
     owner: "{{ sway_user }}"

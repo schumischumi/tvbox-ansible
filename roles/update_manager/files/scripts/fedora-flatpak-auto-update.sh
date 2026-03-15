@@ -17,7 +17,7 @@ if [ $? -eq 100 ]; then
 fi
 
 # Flatpak (remote-ls --updates returns output only if updates exist)
-FLATPAK_UPDATES=$(flatpak remote-ls --updates 2>/dev/null)
+FLATPAK_UPDATES=$(sudo flatpak remote-ls --updates 2>/dev/null)
 if [ -n "$FLATPAK_UPDATES" ]; then
     HAS_UPDATES=1
     echo "→ Flatpak updates available"
@@ -27,10 +27,10 @@ if [ $HAS_UPDATES -eq 1 ]; then
     echo "→ Applying updates..."
 
     # Use dnf for Fedora system updates (exactly as you requested)
-    sudo dnf upgrade --refresh --assumeyes 
+    sudo dnf upgrade --refresh --assumeyes
 
     # Flatpak updates (non-interactive, works in cron)
-    flatpak update --assumeyes --noninteractive 
+    sudo flatpak update --assumeyes --noninteractive
 
     echo "→ Updates installed. Rebooting in 1 minute..."
 

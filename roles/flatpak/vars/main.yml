@@ -3,3 +3,4 @@ flatpak_apps:
   - com.github.iwalton3.jellyfin-media-player
   - org.libretro.RetroArch
   - com.valvesoftware.SteamLink
+  - org.videolan.VLC
