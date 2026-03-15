@@ -16,7 +16,7 @@
 
 - name: Copy update execution config
   ansible.builtin.template:
-    src: update_all_packages.json
+    src: update_all_packages.json.j2
     dest: "/home/{{ sway_user }}/.config/bbe/update_all_packages.json"
     mode: '0644'
     owner: "{{ sway_user }}"
