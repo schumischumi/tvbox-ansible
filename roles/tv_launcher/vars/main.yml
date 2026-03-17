@@ -1,3 +1,4 @@
 tv_launcher_url: "https://github.com/Darkvinx88/TvLauncher/releases/download/1.0/TVLauncher.Linux.v1.0.Portable.tar.gz"
 tv_launcher_dest: "/home/{{ tv_user }}/TVLauncher Linux v1.0 Portable"
 tv_launcher_script: "{{ tv_launcher_dest }}/Launcher.sh"
+
