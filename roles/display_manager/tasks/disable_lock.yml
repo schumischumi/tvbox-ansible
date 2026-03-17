@@ -1,34 +1,18 @@
-- name: Disable screen locking via kdeconfig module
-  community.general.kdeconfig:           # ← check exact module name if different
-    file: kscreenlockerrc
-    group: Daemon
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-  loop:
-    - { key: Autolock,     value: false }
-    - { key: LockOnResume, value: false }
-    - { key: Timeout,      value: 0     }
+- name: Completely disable screen locking (run as regular user with proper env)
+  ansible.builtin.shell: |
+    export $(grep -z ^USER /proc/1/environ | tr '\0' '\n' | xargs -I{} echo "{}")  # optional - try to inherit some env
+    kwriteconfig6 --file kscreenlockerrc --group Daemon --key Autolock false
+    kwriteconfig6 --file kscreenlockerrc --group Daemon --key LockOnResume false
+    kwriteconfig6 --file kscreenlockerrc --group Daemon --key Timeout 0
+    kwriteconfig6 --file powermanagementprofilesrc --group AC --group DPMSControl --key idleTime 0
+    kwriteconfig6 --file powermanagementprofilesrc --group AC --group SuspendSession --key idleTime 0
+    qdbus org.freedesktop.ScreenSaver /ScreenSaver Configure || true
   become: false
   become_user: "{{ tv_user }}"
+  args:
+    executable: /bin/bash
+  changed_when: true  # usually mark as changed to be safe
   environment:
-    # Helps ensure dbus session is found (optional but often fixes issues)
-    XDG_RUNTIME_DIR: "/run/user/{{ lookup('user', username) | default('1000') }}"  # fallback uid 1000
-
-- name: Disable power management screen blanking and suspend (AC + Battery)
-  community.general.kdeconfig:
-    file: powermanagementprofilesrc
-    values:
-      - groups: [AC, DPMSControl]
-        key: idleTime
-        value: 0
-      - groups: [AC, SuspendSession]
-        key: idleTime
-        value: 0
-      - groups: [Battery, DPMSControl]
-        key: idleTime
-        value: 0
-      - groups: [Battery, SuspendSession]
-        key: idleTime
-        value: 0
-  become: false
-  become_user: "{{ tv_user }}"
+    # Critical for Plasma/Qt tools in non-interactive sessions
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ lookup('user', username) | default('1000') }}/bus"
+    XDG_RUNTIME_DIR: "/run/user/{{ lookup('user', username) | default('1000') }}"
