@@ -1,0 +1,6 @@
+---
+- name: TV Launcher Installation
+  ansible.builtin.include_tasks: tv_launcher_installation.yml
+
+- name: TV Launcher Autostart
+  ansible.builtin.include_tasks: tv_launcher_autostart.yml

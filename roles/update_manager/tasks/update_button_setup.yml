@@ -1,39 +1,39 @@
 - name: Create big button executor scripts directory
   ansible.builtin.file:
-    path: "/home/{{ sway_user }}/.config/bbe/scripts"
+    path: "/home/{{ tv_user }}/.config/bbe/scripts"
     state: directory
     mode: '0755'
-    owner: "{{ sway_user }}"
-    group: "{{ sway_user }}"
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
 
 - name: Copy auto update script
   ansible.builtin.copy:
     src: scripts/fedora-flatpak-auto-update.sh
-    dest: "/home/{{ sway_user }}/.config/bbe/scripts/fedora-flatpak-auto-update.sh"
+    dest: "/home/{{ tv_user }}/.config/bbe/scripts/fedora-flatpak-auto-update.sh"
     mode: '0755'
-    owner: "{{ sway_user }}"
-    group: "{{ sway_user }}"
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
 
 - name: Copy update execution config
   ansible.builtin.template:
     src: update_all_packages.json.j2
-    dest: "/home/{{ sway_user }}/.config/bbe/update_all_packages.json"
+    dest: "/home/{{ tv_user }}/.config/bbe/update_all_packages.json"
     mode: '0644'
-    owner: "{{ sway_user }}"
-    group: "{{ sway_user }}"
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
 
 - name: Copy dvd launch config
   ansible.builtin.copy:
     src: config/launch_dvd.json
-    dest: "/home/{{ sway_user }}/.config/bbe/launch_dvd.json"
+    dest: "/home/{{ tv_user }}/.config/bbe/launch_dvd.json"
     mode: '0644'
-    owner: "{{ sway_user }}"
-    group: "{{ sway_user }}"
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
 
 - name: Copy big button executor
   ansible.builtin.copy:
     src: scripts/big_button_executor.py
-    dest: "/home/{{ sway_user }}/big_button_executor.py"
+    dest: "/home/{{ tv_user }}/big_button_executor.py"
     mode: '0755'
-    owner: "{{ sway_user }}"
-    group: "{{ sway_user }}"
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"

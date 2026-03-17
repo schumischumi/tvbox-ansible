@@ -1,0 +1,34 @@
+- name: Disable screen locking via kdeconfig module
+  community.general.kdeconfig:           # ← check exact module name if different
+    file: kscreenlockerrc
+    group: Daemon
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    - { key: Autolock,     value: false }
+    - { key: LockOnResume, value: false }
+    - { key: Timeout,      value: 0     }
+  become: false
+  become_user: "{{ tv_user }}"
+  environment:
+    # Helps ensure dbus session is found (optional but often fixes issues)
+    XDG_RUNTIME_DIR: "/run/user/{{ lookup('user', username) | default('1000') }}"  # fallback uid 1000
+
+- name: Disable power management screen blanking and suspend (AC + Battery)
+  community.general.kdeconfig:
+    file: powermanagementprofilesrc
+    values:
+      - groups: [AC, DPMSControl]
+        key: idleTime
+        value: 0
+      - groups: [AC, SuspendSession]
+        key: idleTime
+        value: 0
+      - groups: [Battery, DPMSControl]
+        key: idleTime
+        value: 0
+      - groups: [Battery, SuspendSession]
+        key: idleTime
+        value: 0
+  become: false
+  become_user: "{{ tv_user }}"

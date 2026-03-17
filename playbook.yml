@@ -18,37 +18,37 @@
     - name: Prompt for username with default value
       ansible.builtin.pause:
         prompt: "Enter username for auto login and sway config (default: {{ default_username }})"
-      register: sway_user_prompt
+      register: tv_user_prompt
 
     - name: Set the final username
       ansible.builtin.set_fact:
-        sway_user: "{{ sway_user_prompt.user_input if sway_user_prompt.user_input | length > 0 else default_username }}"
+        tv_user: "{{ tv_user_prompt.user_input if tv_user_prompt.user_input | length > 0 else default_username }}"
 
     - name: Debug the entered username
       ansible.builtin.debug:
-        msg: "The username entered is {{ sway_user }}"
+        msg: "The username entered is {{ tv_user }}"
 
     # Check if user exists
     - name: Verify that the specified user exists
-      ansible.builtin.command: getent passwd {{ sway_user }}
+      ansible.builtin.command: getent passwd {{ tv_user }}
       register: user_check
       ignore_errors: true
       changed_when: false
 
     - name: Fail if user does not exist
       ansible.builtin.fail:
-        msg: "The user '{{ sway_user }}' does not exist."
+        msg: "The user '{{ tv_user }}' does not exist."
       when: user_check.rc != 0
 
     # Check if home directory exists
     - name: Verify that the home directory for the specified user exists
       ansible.builtin.stat:
-        path: /home/{{ sway_user }}
+        path: /home/{{ tv_user }}
       register: home_dir_stat
 
     - name: Fail if home directory does not exist
       ansible.builtin.fail:
-        msg: "The home directory '/home/{{ sway_user }}' does not exist."
+        msg: "The home directory '/home/{{ tv_user }}' does not exist."
       when: not home_dir_stat.stat.exists
 
   roles:
@@ -61,14 +61,8 @@
     - role: display_manager
       tags: [desktop, login]
 
-    - role: dvd_autoplay
-      tags: [system, multimedia]
-
-    - role: update_manager
-      tags: [system, updates]
-
-    - role: user_config
-      tags: [desktop, sway]
+    - role: tv_launcher
+      tags: [system, ui]
 
     - role: host_configuration
       tags: [system, config]

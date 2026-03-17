@@ -1,15 +1,15 @@
 - name: Create foot config directory
   ansible.builtin.file:
-    path: "/home/{{ sway_user }}/.config/foot"
+    path: "/home/{{ tv_user }}/.config/foot"
     state: directory
     mode: '0755'
-    owner: "{{ sway_user }}"
-    group: "{{ sway_user }}"
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
 
 - name: Copy foot config
   ansible.builtin.copy:
     src: foot/foot.ini
-    dest: "/home/{{ sway_user }}/.config/foot/foot.ini"
+    dest: "/home/{{ tv_user }}/.config/foot/foot.ini"
     mode: '0755'
-    owner: "{{ sway_user }}"
-    group: "{{ sway_user }}"
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"

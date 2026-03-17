@@ -1,0 +1,7 @@
+- name: Add TVLauncher to KDE autostart
+  ansible.builtin.template:
+    src: launcher-autostart.desktop.j2   # you'll need to create this template
+    dest: "/home/{{ tv_user }}/.config/autostart/tvlauncher.desktop"
+    mode: '0644'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"

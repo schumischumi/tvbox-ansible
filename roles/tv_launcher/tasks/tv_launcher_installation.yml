@@ -1,0 +1,30 @@
+- name: Download TVLauncher tar.gz
+  ansible.builtin.get_url:
+    url: "{{ tv_launcher_url }}"
+    dest: "/tmp/TVLauncher.tar.gz"
+    mode: '0644'
+
+- name: Extract TVLauncher to user home
+  ansible.builtin.unarchive:
+    src: "/tmp/TVLauncher.tar.gz"
+    dest: "/home/{{ tv_user }}/"
+    remote_src: true
+    creates: "{{ launcher_script }}"   # skip if already extracted
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
+    mode: 'u+rwX,g+rX,o+rX'
+
+- name: Make launcher.sh executable
+  ansible.builtin.file:
+    path: "{{ tv_launcher_script }}"
+    mode: '0755'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
+
+- name: Add TVLauncher to KDE autostart
+  ansible.builtin.template:
+    src: launcher-autostart.desktop.j2   # you'll need to create this template
+    dest: "/home/{{ tv_user }}/.config/autostart/tvlauncher.desktop"
+    mode: '0644'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
