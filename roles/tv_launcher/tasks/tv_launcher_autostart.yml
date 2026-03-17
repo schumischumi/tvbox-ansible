@@ -6,7 +6,6 @@
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
 
-
 - name: Add TVLauncher to KDE autostart
   ansible.builtin.template:
     src: launcher-autostart.desktop.j2   # you'll need to create this template
