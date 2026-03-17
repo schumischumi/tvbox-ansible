@@ -9,7 +9,7 @@
     src: "/tmp/TVLauncher.tar.gz"
     dest: "/home/{{ tv_user }}/"
     remote_src: true
-    creates: "{{ launcher_script }}"   # skip if already extracted
+    creates: "{{ tv_launcher_script }}"   # skip if already extracted
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
     mode: 'u+rwX,g+rX,o+rX'
