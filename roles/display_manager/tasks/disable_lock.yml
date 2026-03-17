@@ -14,5 +14,5 @@
   changed_when: true  # usually mark as changed to be safe
   environment:
     # Critical for Plasma/Qt tools in non-interactive sessions
-    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ lookup('user', username) | default('1000') }}/bus"
-    XDG_RUNTIME_DIR: "/run/user/{{ lookup('user', username) | default('1000') }}"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+    XDG_RUNTIME_DIR: "/run/user/1000"
