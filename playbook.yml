@@ -28,11 +28,10 @@
       ansible.builtin.getent:
         database: passwd
         key: "{{ tv_user }}"
-      register: user_info
 
     - name: Set tv_user_id fact
       ansible.builtin.set_fact:
-        tv_user_id: "{{ user_info.getent_passwd[tv_user][2] | int }}"
+        tv_user_id: "{{ ansible_facts.getent_passwd[tv_user][2] | int }}"
 
     - name: Debug the user ID
       ansible.builtin.debug:
