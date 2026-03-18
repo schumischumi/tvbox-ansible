@@ -1,5 +1,5 @@
 ---
-- name: Configure Fedora SWAY TVBox
+- name: Configure TV-Box
   hosts: localhost
   gather_facts: true
   become: true
@@ -17,16 +17,27 @@
 
     - name: Prompt for username with default value
       ansible.builtin.pause:
-        prompt: "Enter username for auto login and sway config (default: {{ default_username }})"
+        prompt: "Enter username for auto login and general config (default: {{ default_username }})"
       register: tv_user_prompt
 
     - name: Set the final username
       ansible.builtin.set_fact:
         tv_user: "{{ tv_user_prompt.user_input if tv_user_prompt.user_input | length > 0 else default_username }}"
 
-    - name: Debug the entered username
+    - name: Get passwd entry for selected user
+      ansible.builtin.getent:
+        database: passwd
+        key: "{{ tv_user }}"
+      register: user_info
+
+    - name: Set tv_user_id fact
+      ansible.builtin.set_fact:
+        tv_user_id: "{{ user_info.getent_passwd[tv_user][2] | int }}"
+
+    - name: Debug the user ID
       ansible.builtin.debug:
-        msg: "The username entered is {{ tv_user }}"
+        msg: "User '{{ tv_user }}' has UID {{ tv_user_id }}"
+
 
     # Check if user exists
     - name: Verify that the specified user exists

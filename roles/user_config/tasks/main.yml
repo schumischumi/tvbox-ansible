@@ -1,6 +1,0 @@
----
-- name: Apply SWAY Configuration
-  ansible.builtin.include_tasks: sway_configs.yml
-
-- name: Apply FOOT Configuration
-  ansible.builtin.include_tasks: foot_configs.yml
