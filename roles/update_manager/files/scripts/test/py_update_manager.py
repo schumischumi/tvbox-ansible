@@ -24,9 +24,6 @@ class UpdateWorker(QThread):
     output_signal = Signal(str)
     finished_signal = Signal(bool)  # True if reboot is needed
 
-    def __init__(self):
-        super().__init__()
-
     def run_update(self):
         """Run the update process"""
         if self.updates_available():
@@ -80,29 +77,29 @@ class UpdateWorker(QThread):
 
         combined_output = []
         try:
-            process = subprocess.Popen(
+            with subprocess.Popen(
                 command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
-            )
+            ) as process:
 
-            # Read output line by line
-            while True:
-                output = process.stdout.readline()
-                if output:
-                    clean_output = output.strip()
-                    self.output_signal.emit(clean_output)
-                    if clean_output:
-                        combined_output.append(clean_output)
+                # Read output line by line
+                while True:
+                    output = process.stdout.readline()
+                    if output:
+                        clean_output = output.strip()
+                        self.output_signal.emit(clean_output)
+                        if clean_output:
+                            combined_output.append(clean_output)
 
-                if not output and process.poll() is not None:
-                    break
+                    if not output and process.poll() is not None:
+                        break
 
-            return_code = process.wait()
+                return_code = process.wait()
 
-            # If command failed, log it
-            if return_code not in allowed_exit_codes:
-                self.output_signal.emit(
-                    f"Command {' '.join(command)} failed with exit code {return_code}"
-                )
+                # If command failed, log it
+                if return_code not in allowed_exit_codes:
+                    self.output_signal.emit(
+                        f"Command {' '.join(command)} failed with exit code {return_code}"
+                    )
 
         except Exception as e:  # pylint: disable=broad-exception-caught
             self.output_signal.emit(
