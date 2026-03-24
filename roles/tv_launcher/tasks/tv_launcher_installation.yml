@@ -25,9 +25,10 @@
 - name: Get latest TVLauncher release info from GitHub API
   community.general.github_release:
     repo: "{{ tv_launcher_repo }}"
-    state: latest
+    user: test
     version_file_extension: ""
-    prerelease_filter: false
+    prerelease: false
+    action: latest_release
   register: tv_launcher_latest_release
 
 - name: Extract the latest Linux download URL
