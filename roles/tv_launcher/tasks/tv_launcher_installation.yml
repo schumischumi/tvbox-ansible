@@ -90,7 +90,7 @@
 
 - name: Save new version
   ansible.builtin.copy:
-    content: "{{ tv_launcher_target_asset.name | string }}"
+    content: "{{ tv_launcher_target_asset.name | string | trim }}"
     dest: "{{ tv_launcher_version_file }}"
     mode: '0644'
     owner: "{{ tv_user }}"
