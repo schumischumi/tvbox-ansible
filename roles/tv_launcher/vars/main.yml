@@ -2,6 +2,6 @@
 # tv_launcher_dest: "/home/{{ tv_user }}/TVLauncher Linux v1.0 Portable"
 # tv_launcher_script: "{{ tv_launcher_dest }}/Launcher.sh"
 
-tv_launcher_repo: "TvLauncher"
+tv_launcher_repo: "Darkvinx88/TvLauncher"
 tv_launcher_dir: "/home/{{ tv_user }}/TvLauncher"
-tv_launcher_symlink_path: "/home/{{ tv_user }}/TvLauncher"
+tv_launcher_script: "{{ tv_launcher_dir }}/Launcher.sh"

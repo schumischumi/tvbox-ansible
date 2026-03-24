@@ -1,38 +1,6 @@
-# tasks/tv_launcher_installation.yml
-# - name: Download TVLauncher tar.gz
-#   ansible.builtin.get_url:
-#     url: "{{ tv_launcher_url }}"
-#     dest: "/tmp/TVLauncher.tar.gz"
-#     mode: '0644'
-
-# - name: Extract TVLauncher to user home
-#   ansible.builtin.unarchive:
-#     src: "/tmp/TVLauncher.tar.gz"
-#     dest: "/home/{{ tv_user }}/"
-#     remote_src: true
-#     creates: "{{ tv_launcher_script }}"
-#     owner: "{{ tv_user }}"
-#     group: "{{ tv_user }}"
-#     mode: 'u+rwX,g+rX,o+rX'
-
-# - name: Make launcher.sh executable
-#   ansible.builtin.file:
-#     path: "{{ tv_launcher_script }}"
-#     mode: '0755'
-#     owner: "{{ tv_user }}"
-#     group: "{{ tv_user }}"
-
-# - name: Get latest TVLauncher release info from GitHub API
-#   community.general.github_release:
-#     repo: "{{ tv_launcher_repo }}"
-#     user: Darkvinx88
-#     prerelease: false
-#     action: latest_release
-#   register: tv_launcher_latest_release
-
 - name: Get the latest release information from GitHub
   ansible.builtin.uri:
-    url: "https://api.github.com/repos/Darkvinx88/TvLauncher/releases/latest"
+    url: "https://api.github.com/repos/{{ tv_launcher_repo }}/releases/latest"
     return_content: true
     headers:
       Accept: "application/vnd.github.v3+json"
@@ -48,24 +16,6 @@
           | first }}
   when: github_release.json.assets is defined and github_release.json.assets | length > 0
 
-# - name: Download-Verzeichnis erstellen (falls nicht vorhanden)
-#   ansible.builtin.file:
-#     path: "{{ download_dir }}"
-#     state: directory
-#     mode: '0755'
-
-# - name: Neueste TVLauncher Linux Portable Version herunterladen
-#   ansible.builtin.get_url:
-#     url: "{{ target_asset.browser_download_url }}"
-#     dest: "{{ download_dir }}/{{ target_asset.name }}"
-#     mode: '0644'
-#     force: false   # Bei gleicher Version nicht erneut herunterladen (idempotent)
-#   when: target_asset is defined and target_asset.browser_download_url is defined
-#   register: download_result
-
-
-
-
 - name: Download TVLauncher latest version to temp directory
   ansible.builtin.get_url:
     url: "{{ target_asset.browser_download_url }}"
@@ -76,21 +26,18 @@
 
 - name: success message
   ansible.builtin.debug:
-    msg: "✅ File downloaded successfully: {{ download_result.dest }}"
+    msg: "File downloaded successfully: {{ download_result.dest }}"
   when: download_result.changed
-# - name: Parse the version from filename or release metadata
-#   ansible.builtin.set_fact:
-#     tv_launcher_version: "{{ tv_launcher_latest_release.json.tag_name | default('latest') }}"
 
 - name: Remove old folder if exists
   ansible.builtin.file:
-    path: "/home/{{ tv_user }}/TvLauncher"
+    path: "{{ tv_launcher_dir }}"
     state: absent
     force: true
 
 - name: Create a unique directory for each release version
   ansible.builtin.file:
-    path: "/home/{{ tv_user }}/TvLauncher"
+    path: "{{ tv_launcher_dir }}"
     state: directory
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
@@ -99,33 +46,18 @@
 - name: Extract TVLauncher to version-specific directory
   ansible.builtin.unarchive:
     src: "/tmp/TVLauncher_LATEST.tar.gz"
-    dest: "/home/{{ tv_user }}/TvLauncher"
+    dest: "{{ tv_launcher_dir }}"
     remote_src: true
     extra_opts:
       - --strip-components=1
-    creates: "/home/{{ tv_user }}/TvLauncher/Launcher.sh"
+    creates: "{{ tv_launcher_script }}"
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
     mode: 'u+rwX,g+rX,o+rX'
 
 - name: Make launcher script executable
   ansible.builtin.file:
-    path: "/home/{{ tv_user }}/TvLauncher/Launcher.sh"
+    path: "{{ tv_launcher_script }}"
     mode: '0755'
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
-
-# - name: Remove old symlink if exists (using file module instead of symlink)
-#   ansible.builtin.file:
-#     path: "/home/{{ tv_user }}/TvLauncher"
-#     state: absent
-#     force: true
-
-# - name: Create symbolic link to latest version
-#   ansible.builtin.file:
-#     src: "/home/{{ tv_user }}/.TvLauncher_{{ tv_launcher_version }}"
-#     dest: "{{ tv_launcher_symlink_path }}"
-#     state: link
-#     owner: "{{ tv_user }}"
-#     group: "{{ tv_user }}"
-#     force: true
