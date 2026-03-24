@@ -3,3 +3,4 @@
     flatpak override --user --env=LIBVA_DRIVER_NAME={{ flatpak_vaapi_driver }} --device=dri {{ item }}
   loop: "{{ flatpak_apps }}"
   changed_when: false
+  become_user: "{{ tv_user }}"

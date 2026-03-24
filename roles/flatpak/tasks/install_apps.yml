@@ -3,4 +3,4 @@
     name: "{{ flatpak_apps }}"
     remote: flathub
     state: present
-    method: user
+  become_user: "{{ tv_user }}"
