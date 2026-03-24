@@ -61,6 +61,10 @@
         msg: "The home directory '/home/{{ tv_user }}' does not exist."
       when: not home_dir_stat.stat.exists
 
+    - name: Prompt for steamgriddb api key
+      ansible.builtin.pause:
+        prompt: "Enter steamgriddb api key (can also be entered later in the UI) (default: '')"
+      register: steamgriddb_api_key
   roles:
     - role: base_system
       tags: [system, packages]
