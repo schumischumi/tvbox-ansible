@@ -37,9 +37,13 @@
 - name: Debug tv_launcher_current_version
   ansible.builtin.debug:
     msg: "asset name '{{ tv_launcher_current_version }}'"
+  when: tv_launcher_version_file.stat.exists
+
 - name: Debug asset name
   ansible.builtin.debug:
     msg: "asset name '{{ tv_launcher_target_asset.name }}'"
+  when:
+    - tv_launcher_target_asset is defined
 
 - name: Do we need a download?
   ansible.builtin.set_fact:
