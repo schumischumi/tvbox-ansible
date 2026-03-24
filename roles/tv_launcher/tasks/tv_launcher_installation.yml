@@ -1,22 +1,91 @@
-- name: Download TVLauncher tar.gz
+# tasks/tv_launcher_installation.yml
+# - name: Download TVLauncher tar.gz
+#   ansible.builtin.get_url:
+#     url: "{{ tv_launcher_url }}"
+#     dest: "/tmp/TVLauncher.tar.gz"
+#     mode: '0644'
+
+# - name: Extract TVLauncher to user home
+#   ansible.builtin.unarchive:
+#     src: "/tmp/TVLauncher.tar.gz"
+#     dest: "/home/{{ tv_user }}/"
+#     remote_src: true
+#     creates: "{{ tv_launcher_script }}"
+#     owner: "{{ tv_user }}"
+#     group: "{{ tv_user }}"
+#     mode: 'u+rwX,g+rX,o+rX'
+
+# - name: Make launcher.sh executable
+#   ansible.builtin.file:
+#     path: "{{ tv_launcher_script }}"
+#     mode: '0755'
+#     owner: "{{ tv_user }}"
+#     group: "{{ tv_user }}"
+
+- name: Get latest TVLauncher release info from GitHub API
+  community.general.github_release:
+    repo: "{{ tv_launcher_repo }}"
+    state: latest
+    version_file_extension: ""
+    prerelease_filter: false
+  register: tv_latest_release
+
+- name: Extract the latest Linux download URL
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/{{ tv_launcher_repo }}/releases/latest/assets?per_page=100"
+    method: GET
+  register: tv_assets_response
+  when: tv_latest_release is succeeded
+
+- name: Find the Linux tarball asset URL from release assets
+  ansible.builtin.set_fact:
+    tv_launcher_url: "{{ tv_assets_response.json.assets | select('search', 'Linux') | select('search', 'Portable.tar.gz') | first.url }}"
+  ignore_errors: true
+
+- name: Download TVLauncher latest version to temp directory
   ansible.builtin.get_url:
     url: "{{ tv_launcher_url }}"
-    dest: "/tmp/TVLauncher.tar.gz"
+    dest: "/tmp/TVLauncher_LATEST.tar.gz"
     mode: '0644'
+  when: tv_launcher_url is defined
 
-- name: Extract TVLauncher to user home
+- name: Parse the version from filename or release metadata
+  ansible.builtin.set_fact:
+    tv_version: "{{ tv_latest_release.json.tag_name | default('latest') }}"
+
+- name: Create a unique directory for each release version
+  ansible.builtin.file:
+    path: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}"
+    state: directory
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
+    mode: '0755'
+
+- name: Extract TVLauncher to version-specific directory
   ansible.builtin.unarchive:
-    src: "/tmp/TVLauncher.tar.gz"
-    dest: "/home/{{ tv_user }}/"
+    src: "/tmp/TVLauncher_LATEST.tar.gz"
+    dest: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}"
     remote_src: true
-    creates: "{{ tv_launcher_script }}"   # skip if already extracted
+    creates: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}/Launcher.sh"
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
     mode: 'u+rwX,g+rX,o+rX'
 
-- name: Make launcher.sh executable
+- name: Make launcher script executable
   ansible.builtin.file:
-    path: "{{ tv_launcher_script }}"
+    path: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}/Launcher.sh"
     mode: '0755'
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
+
+- name: Remove old symlink if exists
+  ansible.builtin.file:
+    path: "{{ tv_symlink_path }}"
+    state: absent
+    force: true
+
+- name: Create symbolic link to latest version
+  ansible.builtin.symlink:
+    src: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}"
+    dest: "{{ tv_symlink_path }}"
+    force: true
