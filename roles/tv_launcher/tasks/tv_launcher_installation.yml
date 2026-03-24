@@ -16,6 +16,14 @@
           | first }}
   when: tv_launcher_github_release.json.assets is defined and tv_launcher_github_release.json.assets | length > 0
 
+- name: Debug asset
+  ansible.builtin.debug:
+    msg: "asset '{{ tv_launcher_target_asset }}'"
+
+- name: Debug asset name
+  ansible.builtin.debug:
+    msg: "asset name '{{ tv_launcher_target_asset.name }}'"
+
 - name: Check whether tvlauncher.version exists
   ansible.builtin.stat:
     path: "{{ tv_launcher_version_file }}"
