@@ -26,7 +26,7 @@
 
 - name: Check whether tvlauncher.version exists
   ansible.builtin.stat:
-    path: "{{ tv_launcher_version_file }}"
+    path: "{{ tv_launcher_version_file_path }}"
   register: tv_launcher_version_file
 
 - name: Read out currently saved file name
@@ -88,12 +88,13 @@
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
 
-- name: Ugly version set
-  ansible.builtin.command: >
-    echo "{{ tv_launcher_target_asset.name }}" > "{{ tv_launcher_version_file }}"
-  changed_when: false
-  become_user: "{{ tv_user }}"
-  become: true
+- name: Save new version
+  ansible.builtin.copy:
+    content: "{{ tv_launcher_target_asset.name}"   # or just "{{ tv_launcher_target_asset.name }}"
+    dest: "{{ tv_launcher_version_file_path }}"
+    mode: '0644'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
   when:
     - tv_launcher_target_asset is defined
     - tv_launcher_needs_download | bool

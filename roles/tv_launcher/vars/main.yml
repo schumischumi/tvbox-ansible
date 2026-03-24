@@ -5,4 +5,4 @@
 tv_launcher_repo: "Darkvinx88/TvLauncher"
 tv_launcher_dir: "/home/{{ tv_user }}/TvLauncher"
 tv_launcher_script: "{{ tv_launcher_dir }}/Launcher.sh"
-tv_launcher_version_file: "{{ tv_launcher_dir }}/tvlauncher.version"
+tv_launcher_version_file_path: "{{ tv_launcher_dir }}/tvlauncher.version"
