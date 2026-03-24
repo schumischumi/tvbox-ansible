@@ -82,9 +82,11 @@
 
 - name: Save new version
   ansible.builtin.copy:
-    content: "{{ tv_launcher_target_asset.name }}\n"
+    content: "{{ tv_launcher_target_asset.name }}"
     dest: "{{ tv_launcher_version_file }}"
     mode: '0644'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
   when:
     - tv_launcher_target_asset is defined
     - tv_launcher_needs_download | bool
