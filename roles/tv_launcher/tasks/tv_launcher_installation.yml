@@ -29,24 +29,10 @@
     path: "{{ tv_launcher_version_file_path }}"
   register: tv_launcher_version_file
 
-# - name: Read out currently saved file name
-#   ansible.builtin.file:
-#     path: "{{ tv_launcher_version_file_path }}"
-#   register: tv_launcher_current_version_file
-#   when: tv_launcher_version_file.stat.exists
-
-# - name: Debug tv_launcher_current_version_file.content
-#   ansible.builtin.debug:
-#     msg: "asset name '{{ tv_launcher_current_version_file.content }}'"
-
 - name: Set current filename
   ansible.builtin.set_fact:
     tv_launcher_current_version: "{{ lookup('file', tv_launcher_version_file_path) }}"
   when: tv_launcher_version_file.stat.exists
-
-# - name: Debug tv_launcher_current_version_file.content
-#   ansible.builtin.debug:
-#     msg: "asset name '{{ tv_launcher_current_version_file.content }}'"
 
 - name: Debug tv_launcher_current_version
   ansible.builtin.debug:
@@ -75,6 +61,9 @@
     path: "{{ tv_launcher_dir }}"
     state: absent
     force: true
+  when:
+    - tv_launcher_target_asset is defined and tv_launcher_target_asset.browser_download_url is defined
+    - tv_launcher_needs_download | bool
 
 - name: Create a directory for release version
   ansible.builtin.file:
@@ -83,6 +72,9 @@
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
     mode: '0755'
+  when:
+    - tv_launcher_target_asset is defined and tv_launcher_target_asset.browser_download_url is defined
+    - tv_launcher_needs_download | bool
 
 - name: Extract TVLauncher to directory
   ansible.builtin.unarchive:
@@ -95,6 +87,9 @@
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
     mode: 'u+rwX,g+rX,o+rX'
+  when:
+    - tv_launcher_target_asset is defined and tv_launcher_target_asset.browser_download_url is defined
+    - tv_launcher_needs_download | bool
 
 - name: Make launcher script executable
   ansible.builtin.file:
@@ -102,6 +97,9 @@
     mode: '0755'
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
+  when:
+    - tv_launcher_target_asset is defined and tv_launcher_target_asset.browser_download_url is defined
+    - tv_launcher_needs_download | bool
 
 - name: Save new version
   ansible.builtin.copy:
@@ -111,7 +109,7 @@
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
   when:
-    - tv_launcher_target_asset is defined
+    - tv_launcher_target_asset is defined and tv_launcher_target_asset.browser_download_url is defined
     - tv_launcher_needs_download | bool
 
 - name: Apply launcher config
@@ -121,3 +119,6 @@
     mode: '0644'
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
+  when:
+    - tv_launcher_target_asset is defined and tv_launcher_target_asset.browser_download_url is defined
+    - tv_launcher_needs_download | bool
