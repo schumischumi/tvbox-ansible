@@ -4,3 +4,4 @@
     remote: flathub
     state: present
   become_user: "{{ tv_user }}"
+  become: true

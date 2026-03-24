@@ -1,5 +1,8 @@
 # - name: Configure SDDM autologin
 #   ansible.builtin.import_tasks: autologin.yml
 
-- name: Configure SDDM lock mechanism
+- name: Disable lock mechanism
   ansible.builtin.import_tasks: disable_lock.yml
+
+- name: Configure look and feel
+  ansible.builtin.import_tasks: look_feel.yml

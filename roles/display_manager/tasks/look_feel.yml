@@ -1,0 +1,14 @@
+- name: Copy window rules
+  ansible.builtin.copy:
+    src: kwinrulesrc
+    dest: "/home/{{ tv_user }}/.config/kwinrulesrc"
+    mode: '0644'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
+
+- name: Apply dark theme
+  ansible.builtin.command: >
+    plasma-apply-lookandfeel org.kde.breezedark.desktop
+  changed_when: false
+  become_user: "{{ tv_user }}"
+  become: true

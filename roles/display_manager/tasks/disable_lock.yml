@@ -1,20 +1,7 @@
-- name: Completely disable screen locking (run as regular user with proper env)
-  ansible.builtin.shell: |
-    set -o pipefail
-    export $(grep -z ^USER /proc/1/environ | tr '\0' '\n' | xargs -I{} echo "{}") || true  # optional - try to inherit some env
-    export $(grep -z ^USER /proc/1/environ | tr '\0' '\n' | xargs -I{} echo "{}")  # optional - try to inherit some env
-    kwriteconfig6 --file kscreenlockerrc --group Daemon --key Autolock false
-    kwriteconfig6 --file kscreenlockerrc --group Daemon --key LockOnResume false
-    kwriteconfig6 --file kscreenlockerrc --group Daemon --key Timeout 0
-    kwriteconfig6 --file powermanagementprofilesrc --group AC --group DPMSControl --key idleTime 0
-    kwriteconfig6 --file powermanagementprofilesrc --group AC --group SuspendSession --key idleTime 0
-    qdbus org.freedesktop.ScreenSaver /ScreenSaver Configure || true
-  become: false
-  become_user: "{{ tv_user }}"
-  args:
-    executable: /bin/bash
-  changed_when: true  # usually mark as changed to be safe
-  environment:
-    # Critical for Plasma/Qt tools in non-interactive sessions
-    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ tv_user_id }}/bus"
-    XDG_RUNTIME_DIR: "/run/user/{{ tv_user_id }}"
+- name: Copy lock rules
+  ansible.builtin.copy:
+    src: kscreenlockerrc
+    dest: "/home/{{ tv_user }}/.config/kscreenlockerrc"
+    mode: '0644'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"

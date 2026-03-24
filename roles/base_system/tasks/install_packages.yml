@@ -12,4 +12,7 @@
       - steam-devices
       - htop
       - libdvdcss2
+      - python3-pyside6.qtwidgets
+      - python3-pyside6.qtgui
+      - python3-pyside6.qtcore
     state: present

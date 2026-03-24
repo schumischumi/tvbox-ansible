@@ -1,0 +1,13 @@
+[brave-rule]
+Description=brave browser maximize
+maximizehoriz=true
+maximizehorizrule=3
+maximizevert=true
+maximizevertrule=3
+wmclass=brave-
+wmclasscomplete=true
+wmclassmatch=2
+
+[General]
+count=1
+rules=brave-rule

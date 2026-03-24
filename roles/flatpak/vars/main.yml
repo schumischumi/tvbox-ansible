@@ -4,3 +4,4 @@ flatpak_apps:
   - org.libretro.RetroArch
   - com.valvesoftware.SteamLink
   - org.videolan.VLC
+  - com.brave.Browser

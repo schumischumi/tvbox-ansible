@@ -64,7 +64,12 @@
     - name: Prompt for steamgriddb api key
       ansible.builtin.pause:
         prompt: "Enter steamgriddb api key (can also be entered later in the UI) (default: '')"
-      register: steamgriddb_api_key
+      register: steamgriddb_api_key_prompt
+
+    - name: Set the final steamgriddb_api_key
+      ansible.builtin.set_fact:
+        steamgriddb_api_key: "{{ steamgriddb_api_key_prompt }}"
+
   roles:
     - role: base_system
       tags: [system, packages]
@@ -79,4 +84,7 @@
       tags: [system, ui]
 
     - role: host_configuration
+      tags: [system, config]
+
+    - role: update_manager
       tags: [system, config]

@@ -1,6 +1,6 @@
 ---
 - name: Setup Update Button
-  ansible.builtin.include_tasks: update_button_setup.yml
+  ansible.builtin.include_tasks: update_manager_setup.yml
 
 - name: Setup SuDoers
   ansible.builtin.include_tasks: sudoers_setup.yml

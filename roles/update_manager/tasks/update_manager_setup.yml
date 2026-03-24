@@ -1,0 +1,15 @@
+- name: Create big button executor scripts directory
+  ansible.builtin.file:
+    path: "/home/{{ tv_user }}/.local/bin"
+    state: directory
+    mode: '0755'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
+
+- name: Copy auto update script
+  ansible.builtin.copy:
+    src: py_update_manager.py
+    dest: "/home/{{ tv_user }}/.local/bin/py_update_manager"
+    mode: '0755'
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
