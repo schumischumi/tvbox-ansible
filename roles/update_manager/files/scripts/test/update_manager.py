@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QTextEdit, QLabel)
 from PySide6.QtCore import Qt, QThread, Slot, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QKeySequence
 import subprocess
 from time import sleep
 
@@ -22,10 +22,8 @@ class UpdateWorker(QThread):
             self.finished_signal.emit(True)
             sleep(30)
             #self.generic_run(command=["reboot"])
-        self.output_signal.emit("No Updates available. Exiting in 10 seconds.")
+        self.output_signal.emit("No Updates available.")
         self.finished_signal.emit(True)
-        sleep(10)
-        sys.exit(0)
 
 
     def updates_available(self) -> bool:
@@ -133,6 +131,9 @@ class UpdateManager(QMainWindow):
         # Connect button click signal
         self.update_button.clicked.connect(self.start_update_process)
 
+        # Connect Enter key press to update button click
+        self.keyPressEvent = lambda event: self.handle_enter_key(event)
+
         # Initialize worker thread
         self.worker_thread = QThread()
         self.worker = UpdateWorker()
@@ -142,6 +143,13 @@ class UpdateManager(QMainWindow):
         self.worker_thread.started.connect(self.worker.run_update)
         self.worker.output_signal.connect(self.log_output.append)
         self.worker.finished_signal.connect(self.on_update_finished)
+
+    def handle_enter_key(self, event):
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            # Trigger the update button click
+            self.update_button.click()
+        else:
+            QMainWindow.keyPressEvent(self, event)
 
     def start_update_process(self):
         self.update_button.setEnabled(False)
