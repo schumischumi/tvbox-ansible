@@ -37,13 +37,24 @@
 
 - name: Set current filename
   ansible.builtin.set_fact:
-    tv_launcher_current_version: "{{ tv_launcher_current_version_file.content | default('') }}"
+    tv_launcher_current_version: "{{ tv_launcher_current_version_file.content }}"
   when: tv_launcher_version_file.stat.exists
+
+- name: Debug tv_launcher_current_version_file.content
+  ansible.builtin.debug:
+    msg: "asset name '{{ tv_launcher_current_version_file.content }}'"
+
+- name: Debug tv_launcher_current_version
+  ansible.builtin.debug:
+    msg: "asset name '{{ tv_launcher_current_version }}'"
+- name: Debug asset name
+  ansible.builtin.debug:
+    msg: "asset name '{{ tv_launcher_target_asset.name }}'"
 
 - name: Do we need a download?
   ansible.builtin.set_fact:
     tv_launcher_needs_download: >-
-      {{ not tv_launcher_version_file.stat.exists or (tv_launcher_target_asset.name | default('') != tv_launcher_current_version) }}
+      {{ not tv_launcher_version_file.stat.exists or (tv_launcher_target_asset.name!= tv_launcher_current_version) }}
 
 - name: Download TVLauncher latest version to temp directory
   ansible.builtin.get_url:
