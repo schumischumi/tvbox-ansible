@@ -14,11 +14,13 @@ class UpdateWorker(QThread):
 
     def run_update(self):
         if self.updates_available():
+            self.output_signal.emit("Updating system packages:")
             self.generic_run(command=["sudo", "apt-get", "upgrade", "-y"])
+            self.output_signal.emit("Updating flatpak packages:")
             self.generic_run(command=["flatpak", "update", "-y"])
             self.output_signal.emit("Reboot in 30 seconds!")
             sleep(30)
-            self.generic_run(command=["reboot"])
+            #self.generic_run(command=["reboot"])
 
     def updates_available(self) -> bool:
         commands = [
@@ -26,11 +28,15 @@ class UpdateWorker(QThread):
             ["sudo", "apt-get", "upgrade", "-y"],
         ]
         update_needed = False
-
+        self.output_signal.emit("##################################")
+        self.output_signal.emit("Checking for updates:")
         self.generic_run(command=["sudo", "apt-get", "update", "-y"], allowed_exit_codes=[0, 130])
 
         for command in commands:
-            if self.generic_run(command=command, return_output=True):
+            self.output_signal.emit(f"Checking for with {command}")
+            output = self.generic_run(command=command, return_output=True)
+            if output:
+                self.output_signal.emit(f"Checking for with {output}")
                 update_needed = True
         return update_needed
 
