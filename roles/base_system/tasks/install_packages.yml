@@ -15,4 +15,5 @@
       - python3-pyside6.qtwidgets
       - python3-pyside6.qtgui
       - python3-pyside6.qtcore
+      - openssh-server
     state: present
