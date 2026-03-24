@@ -4,4 +4,4 @@
 
 tv_launcher_repo: "Darkvinx88/TvLauncher"
 tv_launcher_dir: "/home/{{ tv_user }}/TvLauncher"
-tv_symlink_path: "/home/{{ tv_user }}/TvLauncher"
+tv_launcher_symlink_path: "/home/{{ tv_user }}/TvLauncher"

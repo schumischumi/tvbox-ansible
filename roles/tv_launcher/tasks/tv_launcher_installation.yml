@@ -28,14 +28,14 @@
     state: latest
     version_file_extension: ""
     prerelease_filter: false
-  register: tv_latest_release
+  register: tv_launcher_latest_release
 
 - name: Extract the latest Linux download URL
   ansible.builtin.uri:
     url: "https://api.github.com/repos/{{ tv_launcher_repo }}/releases/latest/assets?per_page=100"
     method: GET
   register: tv_assets_response
-  when: tv_latest_release is succeeded
+  when: tv_launcher_latest_release is succeeded
 
 - name: Find the Linux tarball asset URL from release assets
   ansible.builtin.set_fact:
@@ -51,11 +51,11 @@
 
 - name: Parse the version from filename or release metadata
   ansible.builtin.set_fact:
-    tv_version: "{{ tv_latest_release.json.tag_name | default('latest') }}"
+    tv_launcher_version: "{{ tv_launcher_latest_release.json.tag_name | default('latest') }}"
 
 - name: Create a unique directory for each release version
   ansible.builtin.file:
-    path: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}"
+    path: "/home/{{ tv_user }}/.TvLauncher_{{ tv_launcher_version }}"
     state: directory
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
@@ -64,28 +64,31 @@
 - name: Extract TVLauncher to version-specific directory
   ansible.builtin.unarchive:
     src: "/tmp/TVLauncher_LATEST.tar.gz"
-    dest: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}"
+    dest: "/home/{{ tv_user }}/.TvLauncher_{{ tv_launcher_version }}"
     remote_src: true
-    creates: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}/Launcher.sh"
+    creates: "/home/{{ tv_user }}/.TvLauncher_{{ tv_launcher_version }}/Launcher.sh"
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
     mode: 'u+rwX,g+rX,o+rX'
 
 - name: Make launcher script executable
   ansible.builtin.file:
-    path: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}/Launcher.sh"
+    path: "/home/{{ tv_user }}/.TvLauncher_{{ tv_launcher_version }}/Launcher.sh"
     mode: '0755'
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
 
-- name: Remove old symlink if exists
+- name: Remove old symlink if exists (using file module instead of symlink)
   ansible.builtin.file:
-    path: "{{ tv_symlink_path }}"
+    path: "{{ tv_launcher_symlink_path }}"
     state: absent
     force: true
 
 - name: Create symbolic link to latest version
-  ansible.builtin.symlink:
-    src: "/home/{{ tv_user }}/.TvLauncher_{{ tv_version }}"
-    dest: "{{ tv_symlink_path }}"
+  ansible.builtin.file:
+    src: "/home/{{ tv_user }}/.TvLauncher_{{ tv_launcher_version }}"
+    dest: "{{ tv_launcher_symlink_path }}"
+    state: link
+    owner: "{{ tv_user }}"
+    group: "{{ tv_user }}"
     force: true
