@@ -88,14 +88,12 @@
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
 
-- name: Save new version
-  ansible.builtin.lineinfile:
-    path: "{{ tv_launcher_version_file }}"
-    create: yes
-    line: "{{ tv_launcher_target_asset.name }}"
-    mode: '0644'
-    owner: "{{ tv_user }}"
-    group: "{{ tv_user }}"
+- name: Ugly version set
+  ansible.builtin.command: >
+    echo "{{ tv_launcher_target_asset.name }}" > "{{ tv_launcher_version_file }}"
+  changed_when: false
+  become_user: "{{ tv_user }}"
+  become: true
   when:
     - tv_launcher_target_asset is defined
     - tv_launcher_needs_download | bool

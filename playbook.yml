@@ -4,6 +4,14 @@
   gather_facts: true
   become: true
   pre_tasks:
+    - name: Prompt for steamgriddb api key
+      ansible.builtin.pause:
+        prompt: "Enter steamgriddb api key (can also be entered later in the UI) (default: '')"
+      register: steamgriddb_api_key_prompt
+
+    - name: Set the final steamgriddb_api_key
+      ansible.builtin.set_fact:
+        steamgriddb_api_key: "{{ steamgriddb_api_key_prompt.user_input }}"
     - name: Fetch the default username from /etc/passwd
       ansible.builtin.shell: |
         set -o pipefail
@@ -60,15 +68,6 @@
       ansible.builtin.fail:
         msg: "The home directory '/home/{{ tv_user }}' does not exist."
       when: not home_dir_stat.stat.exists
-
-    - name: Prompt for steamgriddb api key
-      ansible.builtin.pause:
-        prompt: "Enter steamgriddb api key (can also be entered later in the UI) (default: '')"
-      register: steamgriddb_api_key_prompt
-
-    - name: Set the final steamgriddb_api_key
-      ansible.builtin.set_fact:
-        steamgriddb_api_key: "{{ steamgriddb_api_key_prompt }}"
 
   roles:
     - role: base_system
