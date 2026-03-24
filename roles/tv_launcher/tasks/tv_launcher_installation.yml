@@ -30,25 +30,54 @@
 #     action: latest_release
 #   register: tv_launcher_latest_release
 
-- name: Extract the latest Linux download URL
+- name: Get the latest release information from GitHub
   ansible.builtin.uri:
     url: "https://api.github.com/repos/Darkvinx88/TvLauncher/releases/latest"
-    method: GET
-  register: tv_assets_response
-  #when: tv_launcher_latest_release is succeeded
+    return_content: true
+    headers:
+      Accept: "application/vnd.github.v3+json"
+    status_code: 200
+  register: github_release
+  changed_when: false
 
-- name: Find the Linux tarball asset URL from release assets
+- name: Find the right Linux portable asset (TVLauncher.Linux.*.Portable.tar.gz)
   ansible.builtin.set_fact:
-    tv_launcher_url: "{{ tv_assets_response.json.assets | select('search', 'Linux') | select('search', 'Portable.tar.gz') | first.browser_download_url }}"
-  ignore_errors: true
+    target_asset: >-
+      {{ github_release.json.assets
+          | selectattr('name', 'search', 'Linux.*Portable\.tar\.gz$')
+          | first }}
+  when: github_release.json.assets is defined and github_release.json.assets | length > 0
+
+# - name: Download-Verzeichnis erstellen (falls nicht vorhanden)
+#   ansible.builtin.file:
+#     path: "{{ download_dir }}"
+#     state: directory
+#     mode: '0755'
+
+# - name: Neueste TVLauncher Linux Portable Version herunterladen
+#   ansible.builtin.get_url:
+#     url: "{{ target_asset.browser_download_url }}"
+#     dest: "{{ download_dir }}/{{ target_asset.name }}"
+#     mode: '0644'
+#     force: false   # Bei gleicher Version nicht erneut herunterladen (idempotent)
+#   when: target_asset is defined and target_asset.browser_download_url is defined
+#   register: download_result
+
+
+
 
 - name: Download TVLauncher latest version to temp directory
   ansible.builtin.get_url:
-    url: "{{ tv_launcher_url }}"
+    url: "{{ target_asset.browser_download_url }}"
     dest: "/tmp/TVLauncher_LATEST.tar.gz"
     mode: '0644'
-  when: tv_launcher_url is defined
+  when: target_asset is defined and target_asset.browser_download_url is defined
+  register: download_result
 
+- name: success message
+  ansible.builtin.debug:
+    msg: "✅ File downloaded successfully: {{ download_result.dest }}"
+  when: download_result.changed
 # - name: Parse the version from filename or release metadata
 #   ansible.builtin.set_fact:
 #     tv_launcher_version: "{{ tv_launcher_latest_release.json.tag_name | default('latest') }}"
