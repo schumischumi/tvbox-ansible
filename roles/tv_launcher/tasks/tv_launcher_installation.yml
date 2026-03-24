@@ -88,7 +88,6 @@
   when:
     - tv_launcher_target_asset is defined
     - tv_launcher_needs_download | bool
-    - tv_launcher_download_result.changed | default(false)
 
 - name: Apply launcher config
   ansible.builtin.template:
