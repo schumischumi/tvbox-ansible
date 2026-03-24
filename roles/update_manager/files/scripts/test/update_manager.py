@@ -19,13 +19,19 @@ class UpdateWorker(QThread):
             self.output_signal.emit("Updating flatpak packages:")
             self.generic_run(command=["flatpak", "update", "-y"])
             self.output_signal.emit("Reboot in 30 seconds!")
+            self.finished_signal.emit(True)
             sleep(30)
             #self.generic_run(command=["reboot"])
+        self.output_signal.emit("No Updates available. Exiting in 10 seconds.")
+        self.finished_signal.emit(True)
+        sleep(10)
+        sys.exit(0)
+
 
     def updates_available(self) -> bool:
         commands = [
             ["flatpak", "remote-ls", "--updates"],
-            ["apt", "--quiet", "list", "--upgradeable"],
+            ["apt-get", "-o", "APT::Get::Show-User-Simulation-Note=false", "--quiet", "--quiet", "--simulate", "upgrade"],
         ]
         update_needed = False
         self.output_signal.emit("##################################")
@@ -150,11 +156,6 @@ class UpdateManager(QMainWindow):
         self.worker_thread.quit()
         self.update_button.setEnabled(True)
         self.status_label.setText("complete")
-
-        if not reboot_needed:
-            self.log_output.append("Update complete. No reboot needed.")
-        else:
-            self.log_output.append("Reboot initiated.")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
