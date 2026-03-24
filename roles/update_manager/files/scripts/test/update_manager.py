@@ -25,7 +25,7 @@ class UpdateWorker(QThread):
     def updates_available(self) -> bool:
         commands = [
             ["flatpak", "remote-ls", "--updates"],
-            ["sudo", "apt-get", "upgrade", "-y"],
+            ["apt", "--quiet", "list", "--upgradeable"],
         ]
         update_needed = False
         self.output_signal.emit("##################################")
