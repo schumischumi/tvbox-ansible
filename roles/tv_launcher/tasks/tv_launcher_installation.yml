@@ -102,8 +102,8 @@
 
 - name: Apply launcher config
   ansible.builtin.template:
-    src: launcher-apps.json.j2
-    dest: "{{ tv_launcher_dir }}/launcher-apps.json"
+    src: launcher_apps.json.j2
+    dest: "{{ tv_launcher_dir }}/launcher_apps.json"
     mode: '0644'
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
