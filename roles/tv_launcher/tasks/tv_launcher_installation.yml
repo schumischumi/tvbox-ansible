@@ -48,7 +48,7 @@
 - name: Do we need a download?
   ansible.builtin.set_fact:
     tv_launcher_needs_download: >-
-      {{ not tv_launcher_version_file.stat.exists or (tv_launcher_target_asset.name!= tv_launcher_current_version) }}
+      {{ not tv_launcher_version_file.stat.exists or (tv_launcher_target_asset.name != tv_launcher_current_version) }}
 
 - name: Download TVLauncher latest version to temp directory
   ansible.builtin.get_url:
