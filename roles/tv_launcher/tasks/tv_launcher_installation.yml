@@ -89,9 +89,10 @@
     group: "{{ tv_user }}"
 
 - name: Save new version
-  ansible.builtin.copy:
-    content: "{{ tv_launcher_target_asset.name | string | trim }}"
-    dest: "{{ tv_launcher_version_file }}"
+  ansible.builtin.lineinfile:
+    path: "{{ tv_launcher_version_file }}"
+    create: yes
+    line: "{{ tv_launcher_target_asset.name }}"
     mode: '0644'
     owner: "{{ tv_user }}"
     group: "{{ tv_user }}"
