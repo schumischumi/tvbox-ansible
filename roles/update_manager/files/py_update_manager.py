@@ -28,7 +28,7 @@ class UpdateWorker(QThread):
         """Run the update process"""
         if self.updates_available():
             self.output_signal.emit("Updating system packages:")
-            self.generic_run(command=["sudo", "-n", "/usr/bin/apt-get", "upgrade", "-y"])
+            self.generic_run(command=["sudo", "-n", "DEBIAN_FRONTEND=noninteractive", "/usr/bin/apt-get", "upgrade", "-y"])
             self.output_signal.emit("Updating flatpak packages:")
             self.generic_run(command=["flatpak", "update", "-y"])
             self.output_signal.emit("Reboot in 30 seconds!")
