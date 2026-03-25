@@ -2,6 +2,7 @@
 """App to do system and flatpak updates"""
 
 import sys
+import os
 import subprocess
 from time import sleep
 from PySide6.QtWidgets import (
@@ -76,9 +77,11 @@ class UpdateWorker(QThread):
             allowed_exit_codes = [0]
 
         combined_output = []
+        env = os.environ.copy()
+        env["DEBIAN_FRONTEND"] = "noninteractive"
         try:
             with subprocess.Popen(
-                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, env=env
             ) as process:
 
                 # Read output line by line
