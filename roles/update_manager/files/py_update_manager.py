@@ -78,7 +78,7 @@ class UpdateWorker(QThread):
         combined_output = []
         try:
             with subprocess.Popen(
-                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=True
+                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
             ) as process:
 
                 # Read output line by line
