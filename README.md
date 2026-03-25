@@ -56,8 +56,8 @@ These steps will never be automated by Ansible, because they are quite hw specif
 ### Working Features
 
 - Installing base packages
-- Installing the flatpaks vacuum, retro Arch, Steam Link, VLC and jellyfin-media-player
-- Installing TVLauncher v 1.0.0 (https://github.com/Darkvinx88/TvLauncher)
+- Installing the flatpaks vacuum, retro Arch, Steam Link, VLC, brave and jellyfin-media-player
+- Installing TVLauncher v 1.1.0 (https://github.com/Darkvinx88/TvLauncher)
 - Automatically starting TVLauncher
 - Detect GPU for hardware acceleration ENV (iHD / i965 / radeonsi)
 - overwrite timeout config so no auth is necessary after sleep
