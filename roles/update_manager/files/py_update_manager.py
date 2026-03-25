@@ -5,6 +5,7 @@ import sys
 import os
 import subprocess
 from time import sleep
+from tempfile import NamedTemporaryFile
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -29,7 +30,7 @@ class UpdateWorker(QThread):
         """Run the update process"""
         if self.updates_available():
             self.output_signal.emit("Updating system packages:")
-            self.generic_run(command=["sudo", "apt-get", "upgrade", "-y"])
+            self.generic_run(command=["sudo", "apt-get", "upgrade", "-y"], i_hate_ubuntu=True)
             self.output_signal.emit("Updating flatpak packages:")
             self.generic_run(command=["flatpak", "update", "-y"])
             self.output_signal.emit("Reboot in 30 seconds!")
@@ -57,7 +58,7 @@ class UpdateWorker(QThread):
         self.output_signal.emit("##################################")
         self.output_signal.emit("Checking for updates:")
         self.generic_run(
-            command=["sudo", "apt-get", "update", "-y"], allowed_exit_codes=[0, 130]
+            command=["sudo", "apt-get", "update"], allowed_exit_codes=[0, 130], i_hate_ubuntu=True
         )
 
         for command in commands:
@@ -69,7 +70,7 @@ class UpdateWorker(QThread):
         return update_needed
 
     def generic_run(
-        self, command, return_output=False, allowed_exit_codes=None
+        self, command, return_output=False, allowed_exit_codes=None, i_hate_ubuntu=False
     ) -> list[str] | None:
         """Runs a shell command with optional output capture."""
 
@@ -77,11 +78,20 @@ class UpdateWorker(QThread):
             allowed_exit_codes = [0]
 
         combined_output = []
-        env = os.environ.copy()
-        env["DEBIAN_FRONTEND"] = "noninteractive"
+        self.output_signal.emit("Updating system packages:")
+        if i_hate_ubuntu:
+
+            temp_file = NamedTemporaryFile(mode='w+', delete=False)
+            command_string = " ".join(command)
+            temp_file.write(f"#!/bin/bash\n{command_string}\nexit $?")
+            temp_file.flush()
+            temp_file.close()
+            os.chmod(temp_file.name, 0o755)
+            command = [temp_file.name]
+
         try:
             with subprocess.Popen(
-                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, env=env
+                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
             ) as process:
 
                 # Read output line by line
@@ -108,6 +118,8 @@ class UpdateWorker(QThread):
             self.output_signal.emit(
                 f"Error running command {' '.join(command)}: {str(e)}"
             )
+        if i_hate_ubuntu and temp_file:
+            os.unlink(temp_file.name)
 
         if return_output:
             return combined_output
