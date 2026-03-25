@@ -28,7 +28,7 @@ class UpdateWorker(QThread):
         """Run the update process"""
         if self.updates_available():
             self.output_signal.emit("Updating system packages:")
-            self.generic_run(command=["sudo", "-n", "DEBIAN_FRONTEND=noninteractive", "/usr/bin/apt-get", "upgrade", "-y"])
+            self.generic_run(command=["sudo", "apt-get", "upgrade", "-y"])
             self.output_signal.emit("Updating flatpak packages:")
             self.generic_run(command=["flatpak", "update", "-y"])
             self.output_signal.emit("Reboot in 30 seconds!")
@@ -78,7 +78,7 @@ class UpdateWorker(QThread):
         combined_output = []
         try:
             with subprocess.Popen(
-                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=True
             ) as process:
 
                 # Read output line by line
