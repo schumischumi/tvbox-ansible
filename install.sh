@@ -29,7 +29,7 @@ case "$TOOL" in
         echo "=== Git checkout ==="
         echo "Remote repositories: $git_url"
         git clone $git_url
-        cd $$output_folder
+        cd $output_folder
         ;;
 
     curl)
