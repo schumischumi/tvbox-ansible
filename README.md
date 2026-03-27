@@ -6,7 +6,18 @@ The base is kubuntu 26.04 lts which needs to be installed with a user that also 
 ## Preparation
 
 - Download and install kubuntu 26.04 lts
-- Add a user with sudo permissions
+- Add a user with sudo permissions & autostart
+
+### Option 1
+
+``` bash
+
+curl -fsSL https://github.com/schumischumi/tvbox-ansible/archive/refs/heads/install.sh | bash
+ or
+wget -qO- https://github.com/schumischumi/tvbox-ansible/archive/refs/heads/install.sh | bash
+```
+
+### Option 2
 - Install ansible: `sudo apt install ansible`
 - Use wget / curl / git to download this repo:
 
