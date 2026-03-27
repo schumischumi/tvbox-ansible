@@ -15,6 +15,7 @@ http_url="https://github.com/schumischumi/tvbox-ansible/archive/refs/heads/main.
 git_url="https://github.com/schumischumi/tvbox-ansible.git"
 default_tools="ansible"
 
+cd /tmp
 sudo apt-get update
 case "$TOOL" in
     git)
