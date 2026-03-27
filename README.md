@@ -12,9 +12,13 @@ The base is kubuntu 26.04 lts which needs to be installed with a user that also 
 
 ``` bash
 
-curl -fsSL https://github.com/schumischumi/tvbox-ansible/archive/refs/heads/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/schumischumi/tvbox-ansible/refs/heads/main/install.sh | bash
  or
-wget -qO- https://github.com/schumischumi/tvbox-ansible/archive/refs/heads/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/schumischumi/tvbox-ansible/refs/heads/main/install.sh | bash
+
+# or for tv input
+wget https://tinyurl.com/yc4myjup -O install.sh
+
 ```
 
 ### Option 2
